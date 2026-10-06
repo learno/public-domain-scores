@@ -1,0 +1,58 @@
+# 修正清单 Corrections（导出时套在 source.txt 之上；旧 token 必须逐个精确匹配，否则导出报错）
+# 格式 Format:  <part> <小节>: <旧 token …> => <新 token …>      （新 token 写 "-" 表示只删除）
+# 每条前面用注释写明依据（扫描页、位置）。Give the evidence (scan page / position) in a comment above each entry.
+# 2026-10-06 对照 Singer 四手联弹扫描谱（n5 = Secondo p.2，n6 = Primo p.3）核实。证据图在 evidence/。
+
+# Z1 第 6 小节末的十六分音符和弦只有一个十六分音符（双符尾），不延长，系统末没有连线；第 10 小节 Secondo 同。
+#    Bar 6 (and Secondo bar 10) last chord is a single 16th, not held over.
+#    证据 evidence: za_pri_b6-7_raw.png, za_sec_b6-7_raw.png, za_sec_b10-12_raw.png
+primo_rh 6: 3.75:C5/4.5 3.75:E5/4.5 => 3.75:C5/0.25 3.75:E5/0.25
+primo_lh 6: 3.75:E4/4.5 3.75:G4/4.5 => 3.75:E4/0.25 3.75:G4/0.25
+secondo_rh 6: 3.75:C3/4.5 3.75:G3/4.5 3.75:C4/4.5 => 3.75:C3/0.25 3.75:G3/0.25 3.75:C4/0.25
+secondo_rh 10: 3.75:C3/4.5 3.75:G3/4.5 3.75:C4/4.5 => 3.75:C3/0.25 3.75:G3/0.25 3.75:C4/0.25
+
+# Z2 第 7、11 小节 Primo：第 1 拍二分音符和弦（f >），第 3 拍同一和弦重新起音（p），连到下一小节的十六分音符。
+#    Primo bars 7 and 11: half-note chord, re-struck on beat 3 and tied into the next bar's 16th.
+#    证据 evidence: za_pri_b7_raw.png, za_pri_b6-7_raw.png
+primo_rh 7: 0:C5/4.25 0:Eb5/4.25 => 0:C5/2 0:Eb5/2 2:C5/2.25 2:Eb5/2.25
+primo_lh 7: 0:Eb4/4.25 0:G4/4.25 => 0:Eb4/2 0:G4/2 2:Eb4/2.25 2:G4/2.25
+primo_rh 11: 0:E5/4.25 0:G5/4.25 0:C6/4.25 => 0:E5/2 0:G5/2 0:C6/2 2:E5/2.25 2:G5/2.25 2:C6/2.25
+primo_lh 11: 0:E4/4.25 0:G4/4.25 0:C5/4.25 => 0:E4/2 0:G4/2 0:C5/2 2:E4/2.25 2:G4/2.25 2:C5/2.25
+
+# Z3 第 15 小节 Secondo 上行：C4 + F3（F3 延续到后半），后半 C3↔C4 震音；没有 A3。新读法写在 source.txt 的补转写段。
+#    Secondo upper bar 15: no A3 (new reading added in the supplementary block of source.txt).
+#    证据 evidence: za_sec_up_b15-16.png
+secondo_rh 15: 0:F3/4 0:A3/4 0:C4/4 => -
+
+# Z4 第 16 小节第 2 个十六分音符和弦：Primo 上行 G5 B5，下行 G4 B4 C5。
+#    证据 evidence: za_pri_b16_b13_rh.png, za_pri_b16_b13_lh.png
+primo_rh 16: 0.25:A5/0.25 0.25:C6/0.25 => 0.25:G5/0.25 0.25:B5/0.25
+primo_lh 16: 0.25:A4/0.25 0.25:C5/0.25 => 0.25:G4/0.25 0.25:B4/0.25 0.25:C5/0.25
+
+# Z5 第 16 小节第 4 拍：Primo 上行 A♭5 C6 D6，下行 F4 A♭4 C5 D5（A 前有降号；Secondo 同为 F3 A♭3 C4 D4）。
+#    证据 evidence: za_pri_b16_b4_rh.png, za_pri_b16_b4_lh.png, za_sec_up_b16_b4.png
+primo_rh 16: 3:Bb5/1 3:D6/1 3:E6/1 => 3:Ab5/1 3:C6/1 3:D6/1
+primo_lh 16: 3:G4/1 3:Bb4/1 3:C5/1 3:D5/1 => 3:F4/1 3:Ab4/1 3:C5/1 3:D5/1
+
+# Z6 第 17 小节最后一个十六分音符：Primo 上行 F5 C6 D6 F6，下行 D4 F4 C5。
+#    证据 evidence: za_pri_b17_rh.png, za_pri_b17_lh_end.png
+primo_rh 17: 3.75:G5/0.25 3.75:D6/0.25 3.75:F6/0.25 => 3.75:F5/0.25 3.75:C6/0.25 3.75:D6/0.25 3.75:F6/0.25
+primo_lh 17: 3.75:D4/0.25 3.75:F4/0.25 3.75:G4/0.25 3.75:D5/0.25 => 3.75:D4/0.25 3.75:F4/0.25 3.75:C5/0.25
+
+# Z7 第 18 小节第 3 拍是 A 小三和弦：Primo 上行 A5 C6 E6 A6，下行 E4 A4 C5 E5。
+#    证据 evidence: za_pri_b18_ch2_rh.png, za_pri_b18_rh.png, za_pri_b18_lh.png, za_pri_b18_lh_ch2.png
+primo_rh 18: 2:A5/1 2:D6/1 2:F6/1 2:A6/1 => 2:A5/1 2:C6/1 2:E6/1 2:A6/1
+primo_lh 18: 2:D4/1 2:A4/1 2:D5/1 2:F5/1 => 2:E4/1 2:A4/1 2:C5/1 2:E5/1
+
+# Z8 第 18 小节第 4 拍 Primo 上行是 G 大三和弦 B5 D6 G6 B6（没有 F；符头略糊，把握中高）。下行 G4 B4 D5 G5 原读正确。
+#    证据 evidence: za_pri_b18_ch3_rh.png
+primo_rh 18: 3:D6/1 3:F6/1 3:G6/1 3:B6/1 => 3:B5/1 3:D6/1 3:G6/1 3:B6/1
+
+# Z9 第 21–22 小节 Secondo 低音震音是 C2↔C3（比前面高一个八度）。
+#    证据 evidence: za_sec_b19-22_bass_g.png
+secondo_lh 21: 0:C1/2TA3 0:C2/2TB3 2:C1/2TA3 2:C2/2TB3 => 0:C2/2TA3 0:C3/2TB3 2:C2/2TA3 2:C3/2TB3
+secondo_lh 22: 0:C1/2TA3 0:C2/2TB3 2:C1/2TA3 2:C2/2TB3 => 0:C2/2TA3 0:C3/2TB3 2:C2/2TA3 2:C3/2TB3
+
+# Z10 第 21 小节 Secondo 上行原数据 C2 + C3 没有读谱依据（扫描谱那里是更高音区的 ff 和弦，未转写）：删除，留空并加标注。
+#    Secondo upper bar 21: C2 + C3 had no basis in the scan; removed and left blank (not transcribed).
+secondo_rh 21: 0:C2/0.5 0:C3/0.5 => -

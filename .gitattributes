@@ -1,0 +1,7 @@
+# 文本统一 LF；扫描图与 MIDI 按二进制处理（不启用 Git LFS：单张图都在 4 MB 以内）
+* text=auto eol=lf
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.mid binary
+*.musicxml text eol=lf

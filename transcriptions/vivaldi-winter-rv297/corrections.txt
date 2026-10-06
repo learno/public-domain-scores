@@ -1,0 +1,35 @@
+# 修正清单 Corrections（导出时套在 source.txt 之上；旧 token 必须逐个精确匹配，否则导出报错）
+# 格式 Format:  <part> <小节>: <旧 token …> => <新 token …>      （新 token 写 "-" 表示只删除）
+# 每条前面用注释写明依据（扫描页、位置）。Give the evidence (scan page / position) in a comment above each entry.
+# 2026-10-06 对照 Hue 1739 分谱扫描（Le Cène 版辅助）核实。证据图在 evidence/。
+
+# C1 低音第 5 小节 F3 ×8 → E♮3 ×8。依据：Hue 1739 Organo e Violoncello（hue_p153.jpg）第二行首小节，
+#    音符前有还原号，数字低音 7/5（E 减七和弦，与中提琴 G、第二小提琴 D♭、第一小提琴 / 独奏 B♭ 相合）。
+#    Bass bar 5: F3 x8 -> E-natural-3 x8 (hue_p153.jpg, 2nd system, 1st bar: natural sign + figures 7/5).
+#    证据 evidence: w_bc_hue_b5-9_zoom.png
+winter.bc 5: 0:F3/0.5. 0.5:F3/0.5. 1:F3/0.5. 1.5:F3/0.5. 2:F3/0.5. 2.5:F3/0.5. 3:F3/0.5. 3.5:F3/0.5. => 0:E3/0.5. 0.5:E3/0.5. 1:E3/0.5. 1.5:E3/0.5. 2:E3/0.5. 2.5:E3/0.5. 3:E3/0.5. 3.5:E3/0.5.
+
+# C2 第一小提琴第 5 小节：只有前 4 个八分音符印了点，后 4 个只有两两连线 → 去掉后 4 个的断奏点。
+#    Violino Primo bar 5: dots on the first four eighths only.
+#    证据 evidence: w_vln1_hue_b4-7.png
+winter.vln1 5: 2:Bb5/0.5. 2.5:Bb5/0.5. 3:Bb5/0.5. 3.5:Bb5/0.5. => 2:Bb5/0.5 2.5:Bb5/0.5 3:Bb5/0.5 3.5:Bb5/0.5
+
+# C3 第一小提琴第 16 小节：8 个八分音符都印了点（另有两两连线）→ 加断奏点。
+#    Violino Primo bar 16: all eight eighths dotted.
+#    证据 evidence: w_vln1_hue_b13-16_z2.png
+winter.vln1 16: 0:G4/0.5 0.5:G4/0.5 1:G4/0.5 1.5:G4/0.5 2:G4/0.5 2.5:G4/0.5 3:G4/0.5 3.5:G4/0.5 => 0:G4/0.5. 0.5:G4/0.5. 1:G4/0.5. 1.5:G4/0.5. 2:G4/0.5. 2.5:G4/0.5. 3:G4/0.5. 3.5:G4/0.5.
+
+# C4 第二小提琴第 6 小节：前 4 个八分音符印了点 → 加断奏点。
+#    Violino Secondo bar 6: dots on the first four eighths.
+#    证据 evidence: w_vln2_hue_b5-6_zoom.png
+winter.vln2 6: 0:C5/0.5 0.5:C5/0.5 1:C5/0.5 1.5:C5/0.5 => 0:C5/0.5. 0.5:C5/0.5. 1:C5/0.5. 1.5:C5/0.5.
+
+# C5 中提琴第 13–14 小节：只有两两连线，没有点 → 去掉断奏点。
+#    Alto Viola bars 13-14: slurs in pairs only, no dots.
+#    证据 evidence: w_vla_hue_b13-16_z2.png
+winter.vla 13: 2:C4/0.5. 2.5:C4/0.5. 3:C4/0.5. 3.5:C4/0.5. => 2:C4/0.5 2.5:C4/0.5 3:C4/0.5 3.5:C4/0.5
+winter.vla 14: 0:C4/0.5. 0.5:C4/0.5. 1:C4/0.5. 1.5:C4/0.5. => 0:C4/0.5 0.5:C4/0.5 1:C4/0.5 1.5:C4/0.5
+
+# 不改：低音第 2–10 小节保留断奏点。原谱只在第 1 小节印点（之后只有两两连线），按「同前」（simile）续奏断音。
+#    Bass bars 2-10 keep their dots: printed only in bar 1, continued by simile.
+#    证据 evidence: w_bc_hue_b1-4_zoom.png
