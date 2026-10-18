@@ -41,7 +41,7 @@ G. F. Handel, *Judas Macchabaeus: an oratorio, in score as it was originally per
 
 ## 转写方法
 
-- 2026-10-19 人工逐音目读。辅助脚本只做裁切、放大、在每行谱表上标出线 / 间的音名；音高、时值、临时记号都由人眼在放大图上确认。合唱四部与通奏低音由本人读；乐队七个声部由另一位转写者读，本人在第 2、6、7、12、14、15 小节等处抽查复核（全部一致），疑点逐一回扫描谱确认。
+- 2026-10-19 人工逐音目读。辅助脚本只做裁切、放大、在每行谱表上标出线 / 间的音名；音高、时值、临时记号都由人眼在放大图上确认。合唱四部与通奏低音由本人读；乐队七个声部由一位转写者读，同日又由另一位复核者从扫描谱独立重读全部 7 个声部、24 小节（168 个声部小节，先独立读出、再与 `source.txt` 逐音比对），结果逐音一致，没有改动；疑点逐一回扫描谱确认。
 - 小节按原印本小节线编号，原印本每小节就是 ¢ 的一小节，与现代小节一一对应。
 - 临时记号照印：印了才写；调号一个升号（圆号行除外）。
 - **圆号**：原印本只写 "Corno"，没有注明调。按 C 大调写法、与 G 大调的乐队同奏，判定为 G 调圆号（实际音高比记谱低纯四度）。`source.txt` 写记谱音高；MusicXML 加 `<transpose>`（diatonic −3，chromatic −5）、调号 0；MIDI 按实际音高。圆号行第 11–12 小节是整小节休止。
@@ -56,17 +56,17 @@ G. F. Handel, *Judas Macchabaeus: an oratorio, in score as it was originally per
 
 ## 已知问题与不确定处
 
-没有需要改动印面的地方（`corrections.txt` 为空）。下列各处都按印面读，列出供核对：
+没有需要改动印面的地方（`corrections.txt` 为空）。下列各处都按印面读，列出供核对；乐队各条在独立复核时都重新放大判读过，结论不变：
 
 | 小节 | 声部 | 问题与结论 | 证据图 |
 |---|---|---|---|
 | 11 | Tenor | 第 1 拍印 ✱D4（C4 谱号最上两线之间的间），读作 D♯4（E 小调的导音，B 大三和弦）。Novello 1906 同样是升号 | [`tenor_m11_Dsharp4.png`](evidence/tenor_m11_Dsharp4.png) |
 | 11 | Alto | 第 1 个音的音头印得偏高，最宽处在 G4 线上方的间里，读作 A4（与 Soprano 的 C5 成三度、下行 A G F♯ E 的音阶） | [`alto_m11_A4.png`](evidence/alto_m11_A4.png) |
-| 12 | 双簧管下声部 | 全音符 ✱ 音头印得很低（中心接近 C4 位置），但没有加线；读作 D♯4（B 大三和弦，第二小提琴同时是 D♯5，Alto 同时是 D♯4） | [`oboe_m12_lower_Dsharp4.png`](evidence/oboe_m12_lower_Dsharp4.png) |
+| 12 | 双簧管下声部 | 全音符 ✱ 音头印得很低（中心接近 C4 位置），但没有加线，且与上声部 F♯4 的音头上下相贴、印成三度的 "8" 形；读作 D♯4（B 大三和弦，第二小提琴同时是 D♯5，Alto 同时是 D♯4）。复核同此结论 | [`oboe_m12_lower_Dsharp4.png`](evidence/oboe_m12_lower_Dsharp4.png) |
 | 13–14 | Tenor / Bass | 第 14 小节第 1 拍 Tenor 与 Bass 都印 ✱C4，同度；照印 | [`tenor_bass_m13-14_Csharp4_unison.png`](evidence/tenor_bass_m13-14_Csharp4_unison.png) |
-| 14 | 双簧管上声部 | 附点二分 G5，附点印在两个音之间，然后第 4 拍再奏一个四分 G5（同音重奏）。照印 | [`ob_m14-15_G5_restruck.png`](evidence/ob_m14-15_G5_restruck.png) |
-| 7、23 | 第二长笛 / 小提琴 | 第 4 拍是附点八分 F♯5 + 十六分 C5（音头在 B4、D5 两线之间，不是 D5），下一小节解决到 B4 | [`fl_vln2_m07-08_sixteenth_C5.png`](evidence/fl_vln2_m07-08_sixteenth_C5.png) |
-| 15 | 第一长笛 / 小提琴 | 第 3 拍 E5 后跳上 ✱C6（两条加线），跨度六度；照印 | [`fl_vln1_m15_E5_Csharp6.png`](evidence/fl_vln1_m15_E5_Csharp6.png) |
+| 14 | 双簧管上声部 | 附点二分 G5，附点印在两个音之间，然后第 4 拍再奏一个四分 G5（同音重奏；第 4 拍是实心音头、单独符干）。下声部同时是 A4 二分 + C♯5 二分。照印，复核一致 | [`ob_m14-15_G5_restruck.png`](evidence/ob_m14-15_G5_restruck.png) |
+| 7、23 | 第二长笛 / 小提琴 | 第 4 拍是附点八分 F♯5 + 十六分 C5（音头在 B4、D5 两线之间，不是 D5；两处放大后相同），属七和弦的七音，下一小节解决到 B4。复核一致 | [`fl_vln2_m07-08_sixteenth_C5.png`](evidence/fl_vln2_m07-08_sixteenth_C5.png) |
+| 15 | 第一长笛 / 小提琴 | 第 3 拍 E5（最上一间）后跳上 ✱C6（两条加线，升号印在音头前），跨度六度；照印，复核一致 | [`fl_vln1_m15_E5_Csharp6.png`](evidence/fl_vln1_m15_E5_Csharp6.png) |
 
 ## 与其他电子谱的比对
 
