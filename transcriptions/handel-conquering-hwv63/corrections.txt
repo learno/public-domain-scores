@@ -1,0 +1,5 @@
+# 修正清单 Corrections（导出时套在 source.txt 之上；旧 token 必须逐个精确匹配，否则导出报错）
+# 格式 Format:  <part> <小节>: <旧 token …> => <新 token …>      （新 token 写 "-" 表示只删除）
+# 每条前面用注释写明依据（扫描页、位置）。Give the evidence (scan page / position) in a comment above each entry.
+# 2026-10-19 对照 Randall [1769] 总谱扫描（n186 / n187）核实：目前没有修正，source.txt 即照印。
+# No corrections so far: source.txt follows the print. Doubtful readings are listed in README.md.

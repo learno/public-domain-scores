@@ -28,6 +28,8 @@ RIGHTS = ("Transcription released under CC0 1.0 Universal (public domain dedicat
 # staves: [(谱号, [source.txt 段名后缀 …]), …]；clef = G / F / C3（中音谱号）/ G8（低八度高音谱号）
 # 可选 optional: bar_time={小节: (拍数, 拍值)} 个别小节换拍号；repeats=[小节 …] 在该小节末尾画反复记号
 #   （下一小节开头画开始反复）；final_barline=True 末小节画终止线；tempo_words=None 不写速度文字。
+# 移调乐器（part 级可选）：transpose=(diatonic, chromatic) 记谱 → 实际音高（如 G 调圆号 (-3, -5)），
+#   source.txt 写记谱音高，MusicXML 加 <transpose>，MIDI 按实际音高；fifths=<记谱调号> 覆盖全曲调号。
 PIECES = {
     "vivaldi-winter-rv297": dict(
         prefix="winter",
@@ -112,6 +114,32 @@ PIECES = {
             dict(name="Canto", abbr="C.", program=54, staves=[("G", ["canto"])]),
             dict(name="Lute", abbr="Lute", program=25, staves=[("G8", ["lute"])]),
             dict(name="Basso", abbr="B.", program=43, staves=[("F", ["basso"])]),
+        ],
+    ),
+    "handel-conquering-hwv63": dict(
+        prefix="conquering",
+        work="Judas Macchabaeus, HWV 63 — Part III, Full Chorus \"See, the conqu'ring hero comes\"",
+        movement="Full Chorus (complete, 24 bars): orchestra, chorus and basso continuo",
+        creators=[("composer", "George Frideric Handel")],
+        source="Judas Macchabaeus: an oratorio, in score as it was originally perform'd, London: printed for "
+               "William Randall, successor to the late Mr. J. Walsh, [1769] (Music Library, University of North "
+               "Carolina at Chapel Hill; Internet Archive judasmacchabaeus00hand_0), pp. 175–176 (leaves n186–n187). "
+               "Horns encoded at written pitch (horn in G). Figures of the basso continuo not encoded.",
+        time=(2, 2), fifths=1, mode="major", bars=(1, 24), pickup=None,
+        repeats=[8], final_barline=True,
+        tempo_words=None, midi_qpm=112, encoding_date="2026-10-19",
+        parts=[
+            dict(name="Traversa e Violino I", abbr="Trav. e Vl. I", program=41, staves=[("G", ["fl_vln1"])]),
+            dict(name="Traversa e Violino II", abbr="Trav. e Vl. II", program=41, staves=[("G", ["fl_vln2"])]),
+            dict(name="Corno I in G", abbr="Cor. I", program=61, staves=[("G", ["horn1"])], fifths=0, transpose=(-3, -5)),
+            dict(name="Corno II in G", abbr="Cor. II", program=61, staves=[("G", ["horn2"])], fifths=0, transpose=(-3, -5)),
+            dict(name="Oboe I e II", abbr="Ob. I, II", program=69, staves=[("G", ["ob1", "ob2"])]),
+            dict(name="Viola", abbr="Va.", program=42, staves=[("C3", ["viola"])]),
+            dict(name="Soprano", abbr="S.", program=53, staves=[("G", ["soprano"])]),
+            dict(name="Alto", abbr="A.", program=53, staves=[("G", ["alto"])]),
+            dict(name="Tenor", abbr="T.", program=53, staves=[("G8", ["tenor"])]),
+            dict(name="Bass", abbr="B.", program=53, staves=[("F", ["bass"])]),
+            dict(name="Basso continuo", abbr="B.c.", program=43, staves=[("F", ["bc"])]),
         ],
     ),
 }
@@ -366,7 +394,6 @@ def export_piece(key: str, cfg: dict) -> dict:
         raise DataError(f"{key}: sections not mapped to any staff: {sorted(unknown)}")
     num, den = cfg["time"]
     beat = F(3, 2) if (den == 8 and num % 3 == 0) else F(4, den)
-    kalt = key_alter(cfg["fifths"])
 
     # 每个谱表的音符
     staves_notes = []
@@ -433,7 +460,11 @@ def export_piece(key: str, cfg: dict) -> dict:
             if len(vs) > 4:
                 raise DataError(f"{key}: too many voices on {p['name']} staff {si + 1}")
             staff_voices.append(vs)
-            midi_tracks.append((f"{p['name']}" + (f" (staff {si + 1})" if nst > 1 else ""), pi - 1, p["program"], items))
+            midi_tracks.append((f"{p['name']}" + (f" (staff {si + 1})" if nst > 1 else ""),
+                                pi - 1 if pi < 10 else pi, p["program"], items,
+                                p.get("transpose", (0, 0))[1]))
+        pfifths = p.get("fifths", cfg["fifths"])
+        kalt_p = key_alter(pfifths)
         for bar in g.bars():
             b0, blen = g.start(bar), g.length(bar)
             b1 = b0 + blen
@@ -448,7 +479,7 @@ def export_piece(key: str, cfg: dict) -> dict:
                 at = sub(m, "attributes")
                 sub(at, "divisions", divisions)
                 k = sub(at, "key")
-                sub(k, "fifths", cfg["fifths"])
+                sub(k, "fifths", pfifths)
                 sub(k, "mode", cfg["mode"])
                 t = sub(at, "time")
                 sub(t, "beats", num)
@@ -462,6 +493,10 @@ def export_piece(key: str, cfg: dict) -> dict:
                     sub(c, "line", line)
                     if clef == "G8":
                         sub(c, "clef-octave-change", -1)
+                if "transpose" in p:
+                    tr = sub(at, "transpose")
+                    sub(tr, "diatonic", p["transpose"][0])
+                    sub(tr, "chromatic", p["transpose"][1])
                 if pi == 1 and cfg["tempo_words"] is None:
                     sub(m, "sound", tempo=cfg["midi_qpm"])
                 elif pi == 1:
@@ -532,7 +567,7 @@ def export_piece(key: str, cfg: dict) -> dict:
                 state, show = {}, {}
                 for t_, n, tied in sorted(heads, key=lambda h: (h[0], h[1].midi)):
                     keyk = (n.step, n.octave)
-                    cur = state.get(keyk, kalt[n.step])
+                    cur = state.get(keyk, kalt_p[n.step])
                     if not tied and n.alter != cur:
                         show[(id(n), t_)] = {1: "sharp", -1: "flat", 0: "natural", 2: "double-sharp", -2: "flat-flat"}[n.alter]
                     state[keyk] = n.alter
@@ -763,7 +798,7 @@ def build_midi(cfg, g: Grid, tracks) -> bytes:
 
     def tk(t: F) -> int:
         return int(t * PPQ)
-    for name, chan, program, items in tracks:
+    for name, chan, program, items, trans in tracks:
         nm = name.encode("utf-8")
         ev = [(0, 0, b"\xff\x03" + vlq(len(nm)) + nm), (0, 1, bytes([0xC0 | chan, program - 1]))]
         for it in items:
@@ -772,16 +807,16 @@ def build_midi(cfg, g: Grid, tracks) -> bytes:
                 t, k = it.on, 0
                 while t < it.end:
                     for n in (it.a if k % 2 == 0 else it.b):
-                        ev.append((tk(t), 2, bytes([0x90 | chan, n.midi, 76])))
-                        ev.append((tk(t + step * F(9, 10)), 1, bytes([0x80 | chan, n.midi, 0])))
+                        ev.append((tk(t), 2, bytes([0x90 | chan, n.midi + trans, 76])))
+                        ev.append((tk(t + step * F(9, 10)), 1, bytes([0x80 | chan, n.midi + trans, 0])))
                     t += step
                     k += 1
             else:
                 for n in it.notes:
                     gate = F(1, 2) if n.stacc else F(19, 20)
                     vel = 92 if n.acc else 80
-                    ev.append((tk(n.on), 2, bytes([0x90 | chan, n.midi, vel])))
-                    ev.append((tk(n.on + n.dur * gate), 1, bytes([0x80 | chan, n.midi, 0])))
+                    ev.append((tk(n.on), 2, bytes([0x90 | chan, n.midi + trans, vel])))
+                    ev.append((tk(n.on + n.dur * gate), 1, bytes([0x80 | chan, n.midi + trans, 0])))
         chunks.append(track_chunk(ev))
     head = b"MThd" + struct.pack(">IHHH", 6, 1, len(chunks), PPQ)
     return head + b"".join(chunks)
