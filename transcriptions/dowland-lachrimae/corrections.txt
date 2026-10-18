@@ -1,0 +1,11 @@
+# 修正清单 Corrections（导出时套在 source.txt 之上；旧 token 必须逐个精确匹配，否则导出报错）
+# 格式 Format:  <part> <小节>: <旧 token …> => <新 token …>      （新 token 写 "-" 表示只删除）
+# 每条前面用注释写明依据（扫描页、位置）。Give the evidence (scan page / position) in a comment above each entry.
+# 2026-10-18 对照 1600 年原印本扫描（n13 / n14）核实。证据图在 evidence/。
+
+# C1 Canto 第 23 小节第二个 G（minim，"despite" 前的终止）补升号（编辑性临时记号）。
+#    原印本只在前面的 G quaver 前印了 ✱，中间隔一个 F quaver；第 7 小节同一终止音型的两个 G 都印了升号，
+#    鲁特琴第 23 小节第 1 拍也是 E 大三和弦（G#3）。不加则终止导音成 G♮。
+#    Canto bar 23, minim G before the final A: editorial sharp by analogy with bar 7 (both Gs sharpened there).
+#    证据 evidence: canto_m23_sharp_before_G.png, canto_m07_sharps_below_staff.png
+lachrimae.canto 23: 10:G4/2 => 10:G#4/2

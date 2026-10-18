@@ -16,7 +16,7 @@ from fractions import Fraction as F
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-TYPE_Q = {"whole": F(4), "half": F(2), "quarter": F(1), "eighth": F(1, 2), "16th": F(1, 4), "32nd": F(1, 8), "64th": F(1, 16)}
+TYPE_Q = {"breve": F(8), "whole": F(4), "half": F(2), "quarter": F(1), "eighth": F(1, 2), "16th": F(1, 4), "32nd": F(1, 8), "64th": F(1, 16)}
 
 
 def check_musicxml(path: Path) -> tuple[list, dict]:

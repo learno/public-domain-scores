@@ -25,7 +25,9 @@ RIGHTS = ("Transcription released under CC0 1.0 Universal (public domain dedicat
           "The underlying composition is in the public domain.")
 
 # ───────────────────────────── 各段的元数据 ─────────────────────────────
-# staves: [(谱号, [source.txt 段名后缀 …]), …]；clef = G / F / C3（中音谱号）
+# staves: [(谱号, [source.txt 段名后缀 …]), …]；clef = G / F / C3（中音谱号）/ G8（低八度高音谱号）
+# 可选 optional: bar_time={小节: (拍数, 拍值)} 个别小节换拍号；repeats=[小节 …] 在该小节末尾画反复记号
+#   （下一小节开头画开始反复）；final_barline=True 末小节画终止线；tempo_words=None 不写速度文字。
 PIECES = {
     "vivaldi-winter-rv297": dict(
         prefix="winter",
@@ -75,6 +77,24 @@ PIECES = {
         parts=[
             dict(name="Primo", abbr="I", program=1, staves=[("G", ["primo_rh"]), ("G", ["primo_lh"])]),
             dict(name="Secondo", abbr="II", program=1, staves=[("F", ["secondo_rh"]), ("F", ["secondo_lh"])]),
+        ],
+    ),
+    "dowland-lachrimae": dict(
+        prefix="lachrimae",
+        work="The Second Booke of Songs or Ayres — II. Lachrimæ (\"Flow my teares\")",
+        movement="Complete song (one stanza of music, 24 bars); Canto, Basso and lute tablature",
+        creators=[("composer", "John Dowland")],
+        source="John Dowland, The Second Booke of Songs or Ayres, London: Thomas Este for George Eastland, 1600, "
+               "song II (Boston Public Library copy G.400.52, Internet Archive secondbookeofson00dowl), "
+               "leaves n13 (Canto with French lute tablature) and n14 (Basso, printed rotated; last Canto/lute line). "
+               "Lute part = sounding pitches decoded from the tablature (tenor G tuning, 7th course D).",
+        time=(4, 2), fifths=0, mode="minor", bars=(1, 24), pickup=None,
+        bar_time={23: (6, 2)}, repeats=[8, 16], final_barline=True,
+        tempo_words=None, midi_qpm=100,
+        parts=[
+            dict(name="Canto", abbr="C.", program=54, staves=[("G", ["canto"])]),
+            dict(name="Lute", abbr="Lute", program=25, staves=[("G8", ["lute"])]),
+            dict(name="Basso", abbr="B.", program=43, staves=[("F", ["basso"])]),
         ],
     ),
 }
@@ -176,11 +196,21 @@ class Grid:
         self.mlen = F(num * 4, den)
         self.first, self.last = cfg["bars"]
         self.pickup = cfg["pickup"]
+        self.time = {b: tuple(t) for b, t in cfg.get("bar_time", {}).items()}
+        self.base_time = tuple(cfg["time"])
+
+    def time_sig(self, bar):
+        return self.time.get(bar, self.base_time)
 
     def length(self, bar):
+        if bar in self.time:
+            num, den = self.time[bar]
+            return F(num * 4, den)
         return self.pickup if (self.pickup is not None and bar == self.first) else self.mlen
 
     def start(self, bar):
+        if self.time:
+            return sum((self.length(b) for b in range(self.first, bar)), F(0))
         if self.pickup is None:
             return (bar - self.first) * self.mlen
         if bar == self.first:
@@ -192,7 +222,7 @@ class Grid:
 
 
 # 音符时值 → (type, dots)
-TYPES = [(F(4), "whole", 0), (F(3), "half", 1), (F(2), "half", 0), (F(3, 2), "quarter", 1), (F(1), "quarter", 0),
+TYPES = [(F(8), "breve", 0), (F(6), "whole", 1), (F(4), "whole", 0), (F(3), "half", 1), (F(2), "half", 0), (F(3, 2), "quarter", 1), (F(1), "quarter", 0),
          (F(3, 4), "eighth", 1), (F(1, 2), "eighth", 0), (F(3, 8), "16th", 1), (F(1, 4), "16th", 0),
          (F(3, 16), "32nd", 1), (F(1, 8), "32nd", 0), (F(1, 16), "64th", 0)]
 TYPE_OF = {d: (t, k) for d, t, k in TYPES}
@@ -331,7 +361,7 @@ def export_piece(key: str, cfg: dict) -> dict:
             per.append(ns)
         staves_notes.append(per)
 
-    all_vals = [g.mlen] + ([g.pickup] if g.pickup else [])
+    all_vals = [g.mlen] + ([g.pickup] if g.pickup else []) + [g.length(b) for b in g.time]
     for per in staves_notes:
         for ns in per:
             for n in ns:
@@ -389,6 +419,10 @@ def export_piece(key: str, cfg: dict) -> dict:
             m = sub(part, "measure", number=bar)
             if g.pickup is not None and bar == g.first:
                 m.set("implicit", "yes")
+            if bar - 1 in cfg.get("repeats", ()):
+                bl = sub(m, "barline", location="left")
+                sub(bl, "bar-style", "heavy-light")
+                sub(bl, "repeat", direction="forward")
             if bar == g.first:
                 at = sub(m, "attributes")
                 sub(at, "divisions", divisions)
@@ -402,14 +436,23 @@ def export_piece(key: str, cfg: dict) -> dict:
                     sub(at, "staves", nst)
                 for si, (clef, _) in enumerate(p["staves"], 1):
                     c = sub(at, "clef", **({"number": si} if nst > 1 else {}))
-                    sign, line = {"G": ("G", 2), "F": ("F", 4), "C3": ("C", 3)}[clef]
+                    sign, line = {"G": ("G", 2), "G8": ("G", 2), "F": ("F", 4), "C3": ("C", 3)}[clef]
                     sub(c, "sign", sign)
                     sub(c, "line", line)
-                if pi == 1:
+                    if clef == "G8":
+                        sub(c, "clef-octave-change", -1)
+                if pi == 1 and cfg["tempo_words"] is None:
+                    sub(m, "sound", tempo=cfg["midi_qpm"])
+                elif pi == 1:
                     dr = sub(m, "direction", placement="above")
                     dt = sub(dr, "direction-type")
                     sub(dt, "words", cfg["tempo_words"], font_weight="bold")
                     sub(dr, "sound", tempo=cfg["midi_qpm"])
+            elif g.time_sig(bar) != g.time_sig(bar - 1):
+                at = sub(m, "attributes")
+                t = sub(at, "time")
+                sub(t, "beats", g.time_sig(bar)[0])
+                sub(t, "beat-type", g.time_sig(bar)[1])
             for si, (clef, ss) in enumerate(p["staves"]):
                 for part_name, nbar, text in notes_dir:
                     if part_name in ss and nbar == bar:
@@ -581,6 +624,13 @@ def export_piece(key: str, cfg: dict) -> dict:
                 # 一个谱表都没有声部内容时（不会发生：第一声部总会写）
             if not first_voice_written:
                 raise DataError(f"{key}: empty measure {bar}")
+            if bar in cfg.get("repeats", ()):
+                bl = sub(m, "barline", location="right")
+                sub(bl, "bar-style", "light-heavy")
+                sub(bl, "repeat", direction="backward")
+            elif bar == g.last and cfg.get("final_barline"):
+                bl = sub(m, "barline", location="right")
+                sub(bl, "bar-style", "light-heavy")
     ET.indent(root, space="  ")
     body = ET.tostring(root, encoding="unicode")
     xml = ('<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n'
@@ -682,6 +732,10 @@ def build_midi(cfg, g: Grid, tracks) -> bytes:
             (0, 1, b"\xff\x51\x03" + us.to_bytes(3, "big")),
             (0, 2, b"\xff\x58\x04" + bytes([num, {2: 1, 4: 2, 8: 3, 16: 4}[den], 36 if (den == 8 and num % 3 == 0) else 24, 8])),
             (0, 3, b"\xff\x59\x02" + struct.pack(">bB", cfg["fifths"], 1 if cfg["mode"] == "minor" else 0))]
+    for b in g.bars():                      # 个别小节换拍号（含换回原拍号）
+        if b > g.first and g.time_sig(b) != g.time_sig(b - 1):
+            bn, bd = g.time_sig(b)
+            cond.append((int(g.start(b) * PPQ), 2, b"\xff\x58\x04" + bytes([bn, {2: 1, 4: 2, 8: 3, 16: 4}[bd], 24, 8])))
     chunks = [track_chunk(cond)]
 
     def tk(t: F) -> int:
