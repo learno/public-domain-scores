@@ -8,13 +8,14 @@
 
 ### 缘起
 
-为一款独立游戏做背景音乐时，我们从公有领域乐谱的扫描件里**人工逐页读谱**，转写了三段古典曲片段和一首完整的鲁特琴歌曲。网上现成的电子谱很多带有署名-相同方式共享之类的授权，有的根本没有公开数据。我们决定把**自己的转写**连同**转写时读的扫描图**一起公开，转写部分放弃一切权利（CC0），谁都可以自由使用、修改、再发布，不必署名。
+为一款独立游戏做背景音乐时，我们从公有领域乐谱的扫描件里**人工逐页读谱**，转写了四段古典曲片段和一首完整的鲁特琴歌曲。网上现成的电子谱很多带有署名-相同方式共享之类的授权，有的根本没有公开数据。我们决定把**自己的转写**连同**转写时读的扫描图**一起公开，转写部分放弃一切权利（CC0），谁都可以自由使用、修改、再发布，不必署名。
 
 ### 内容
 
 | 片段 | 转写（MusicXML + MIDI） | 底本扫描 | 状态 |
 |---|---|---|---|
 | Vivaldi〈冬〉RV 297（Op. 8 No. 4）第一乐章 Allegro non molto，第 1–18 小节，5 个分谱 | [`transcriptions/vivaldi-winter-rv297/`](transcriptions/vivaldi-winter-rv297/) | [`scans/vivaldi-winter-rv297/`](scans/vivaldi-winter-rv297/)：巴黎 Hue 刻版分谱 1739（BnF），另附 Le Cène 版两份藏本的若干页 | 完整转写；已逐声部对照扫描谱核实，改正低音第 5 小节音高和 5 处断奏点 |
+| Vivaldi〈秋〉RV 293（Op. 8 No. 3）第一乐章 Allegro，第 1–13 小节（开头合奏利都奈罗），5 个分谱 | [`transcriptions/vivaldi-autumn-rv293/`](transcriptions/vivaldi-autumn-rv293/) | [`scans/vivaldi-autumn-rv293/`](scans/vivaldi-autumn-rv293/)：巴黎 Hue 刻版分谱 1739（BnF），与〈冬〉同一套 | 完整转写；已逐声部对照扫描谱、按数字低音核过和声，无需修正；第一小提琴第 8 小节一处弧线未编码（见 README） |
 | Wagner《女武神》第三幕前奏〈女武神的骑行〉，弱起 + 第 1–18 小节 | [`transcriptions/wagner-walkure-ritt/`](transcriptions/wagner-walkure-ritt/) | [`scans/wagner-walkure-ritt/`](scans/wagner-walkure-ritt/)：Klindworth 钢琴缩谱、Schott 总谱（Internet Archive） | **据钢琴缩谱读音**，乐器组归属按总谱推断，不是完整总谱；第 1–8、13–15 小节已对照总谱改正 |
 | R. Strauss《查拉图斯特拉如是说》Op. 30 开头〈日出〉，第 1–22 小节 | [`transcriptions/strauss-zarathustra-op30/`](transcriptions/strauss-zarathustra-op30/) | [`scans/strauss-zarathustra-op30/`](scans/strauss-zarathustra-op30/)：Otto Singer 四手联弹版（Aibl，©1896；Internet Archive） | 已对照扫描谱改正并补转写；只有第 19–21 小节 Secondo 上行谱表**未转写** |
 | Dowland〈Lachrimæ〉（Flow my teares），The Second Booke of Songs（1600）第 II 首，全曲 24 小节：Canto、Basso、鲁特琴谱 | [`transcriptions/dowland-lachrimae/`](transcriptions/dowland-lachrimae/) | [`scans/dowland-lachrimae/`](scans/dowland-lachrimae/)：1600 年伦敦原印本（Boston Public Library 藏本；Internet Archive） | 完整转写；鲁特琴法式指法谱译成实际音高（tenor G 定弦、第 7 弦 D，按低音推定）；歌词未编码 |
@@ -62,13 +63,14 @@ python tools/check.py      # 自查：XML 结构、每小节每声部时值、MI
 
 ### Why this exists
 
-While making the soundtrack for an indie game, we transcribed three short excerpts of classical works and one complete lute song **by hand, page by page, from scans of public-domain editions**. Many existing digital editions carry share-alike licenses or are not published as data at all. We are releasing **our own transcriptions** together with **the scans we read them from**. The transcriptions are dedicated to the public domain (CC0): use, modify and redistribute them freely, no attribution required.
+While making the soundtrack for an indie game, we transcribed four short excerpts of classical works and one complete lute song **by hand, page by page, from scans of public-domain editions**. Many existing digital editions carry share-alike licenses or are not published as data at all. We are releasing **our own transcriptions** together with **the scans we read them from**. The transcriptions are dedicated to the public domain (CC0): use, modify and redistribute them freely, no attribution required.
 
 ### Contents
 
 | Excerpt | Transcription (MusicXML + MIDI) | Source scans | Status |
 |---|---|---|---|
 | Vivaldi, *Winter* RV 297 (Op. 8 No. 4), I. Allegro non molto, bars 1–18, all five parts | [`transcriptions/vivaldi-winter-rv297/`](transcriptions/vivaldi-winter-rv297/) | [`scans/vivaldi-winter-rv297/`](scans/vivaldi-winter-rv297/): Paris partbooks engraved by Hue, 1739 (BnF), plus pages from two copies of the Le Cène edition | Complete; checked part by part against the scans; bass bar 5 pitch and five staccato marks corrected |
+| Vivaldi, *Autumn* RV 293 (Op. 8 No. 3), I. Allegro, bars 1–13 (opening tutti ritornello), all five parts | [`transcriptions/vivaldi-autumn-rv293/`](transcriptions/vivaldi-autumn-rv293/) | [`scans/vivaldi-autumn-rv293/`](scans/vivaldi-autumn-rv293/): Paris partbooks engraved by Hue, 1739 (BnF), the same set as *Winter* | Complete; checked part by part against the scans and against the bass figures; no corrections needed; one curved stroke in first violin bar 8 not encoded (see README) |
 | Wagner, *Die Walküre*, Act III prelude ("Ride of the Valkyries"), upbeat + bars 1–18 | [`transcriptions/wagner-walkure-ritt/`](transcriptions/wagner-walkure-ritt/) | [`scans/wagner-walkure-ritt/`](scans/wagner-walkure-ritt/): Klindworth vocal score and Schott full score (Internet Archive) | **Pitches read from the piano reduction**; assignment to instrument groups inferred from the full score; not a full-score transcription; bars 1–8 and 13–15 corrected from the full score |
 | R. Strauss, *Also sprach Zarathustra* Op. 30, opening ("Sunrise"), bars 1–22 | [`transcriptions/strauss-zarathustra-op30/`](transcriptions/strauss-zarathustra-op30/) | [`scans/strauss-zarathustra-op30/`](scans/strauss-zarathustra-op30/): Otto Singer's piano-duet arrangement (Aibl, ©1896; Internet Archive) | Corrected and completed against the scans, except the Secondo upper staff in bars 19–21 (**not transcribed**) |
 | Dowland, "Lachrimæ" (Flow my teares), *The Second Booke of Songs* (1600) No. II, complete (24 bars): Canto, Basso and lute tablature | [`transcriptions/dowland-lachrimae/`](transcriptions/dowland-lachrimae/) | [`scans/dowland-lachrimae/`](scans/dowland-lachrimae/): the 1600 London print (Boston Public Library copy; Internet Archive) | Complete; French lute tablature decoded to sounding pitch (tenor G tuning, 7th course D, inferred from the bass); lyrics not encoded |

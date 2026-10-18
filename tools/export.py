@@ -46,6 +46,23 @@ PIECES = {
             dict(name="Organo e Violoncello", abbr="Org. e Vc.", program=43, staves=[("F", ["bc"])]),
         ],
     ),
+    "vivaldi-autumn-rv293": dict(
+        prefix="autumn",
+        work="Il cimento dell'armonia e dell'inventione, Op. 8 — Concerto III in F major \"L'Autunno\", RV 293",
+        movement="I. Allegro (bars 1–13, opening ritornello)",
+        creators=[("composer", "Antonio Vivaldi")],
+        source="Partbooks, Paris: engraved by Hue, 1739 (Bibliothèque nationale de France, Gallica ark:/12148/btv1b9062998d), "
+               "via Wikimedia Commons. Manual transcription from scans/vivaldi-autumn-rv293/hue_p013, p063, p097, p125, p150.",
+        time=(4, 4), fifths=-1, mode="major", bars=(1, 13), pickup=None,
+        tempo_words="Allegro", midi_qpm=104, encoding_date="2026-10-18",
+        parts=[
+            dict(name="Violino Principale", abbr="Vl. princ.", program=41, staves=[("G", ["solo"])]),
+            dict(name="Violino Primo", abbr="Vl. I", program=41, staves=[("G", ["vln1"])]),
+            dict(name="Violino Secondo", abbr="Vl. II", program=41, staves=[("G", ["vln2"])]),
+            dict(name="Alto Viola", abbr="Va.", program=42, staves=[("C3", ["vla"])]),
+            dict(name="Organo e Violoncello", abbr="Org. e Vc.", program=43, staves=[("F", ["bc"])]),
+        ],
+    ),
     "wagner-walkure-ritt": dict(
         prefix="valkyries",
         work="Die Walküre, WWV 86B — Act III, Prelude (\"Walkürenritt\")",
@@ -116,7 +133,11 @@ def read_source(path: Path, prefix: str):
             continue
         if ln.startswith("!note "):
             _, part, bar, text = ln.split(None, 3)
-            notes.append((part, int(bar), text))
+            offset = F(0)
+            m = re.match(r"^@([0-9.]+)\s+(.*)$", text)       # "!note <part> <bar> @<beat> <text>": 拍内位置
+            if m:
+                offset, text = F(m.group(1)), m.group(2)
+            notes.append((part, int(bar), text, offset))
             continue
         if ln.startswith("[") and ln.endswith("]"):
             name = ln[1:-1]
@@ -378,7 +399,7 @@ def export_piece(key: str, cfg: dict) -> dict:
     sub(ident, "rights", RIGHTS)
     enc = sub(ident, "encoding")
     sub(enc, "software", "public-domain-scores tools/export.py")
-    sub(enc, "encoding-date", ENCODING_DATE)
+    sub(enc, "encoding-date", cfg.get("encoding_date", ENCODING_DATE))
     sub(ident, "source", cfg["source"])
     # 不画系统分隔符（多声部总谱里系统之间的 "//" 记号；部分渲染器会把它画成一个孤立的斜线）
     dfl = sub(root, "defaults")
@@ -454,11 +475,13 @@ def export_piece(key: str, cfg: dict) -> dict:
                 sub(t, "beats", g.time_sig(bar)[0])
                 sub(t, "beat-type", g.time_sig(bar)[1])
             for si, (clef, ss) in enumerate(p["staves"]):
-                for part_name, nbar, text in notes_dir:
+                for part_name, nbar, text, offset in notes_dir:
                     if part_name in ss and nbar == bar:
                         dr = sub(m, "direction", placement="above" if si == 0 else "below")
                         dt = sub(dr, "direction-type")
                         sub(dt, "words", text, font_style="italic", font_size="8")
+                        if offset:
+                            sub(dr, "offset", int(offset * divisions))
                         if nst > 1:
                             sub(dr, "staff", si + 1)
             first_voice_written = False
