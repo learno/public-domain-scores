@@ -24,4 +24,5 @@
 ## 找页与看过而未收录的材料
 
 - 定位：先看了同一 Commons 分类里第 700、750、800、850、900、950 张与第 5、7、9、11、13 张（扉页）的缩略图，从书末索引（第 950 张，第 96* 页）"Sequentiae — Dies iræ, dies illa [144]" 找到页码。
+- 核对第 1 小节谱号后的记号时（2026-10-19）另看了同书 Commons 第 758–763 张的 960 px 缩略图（第 [138]–[143] 页），并下载了第 762、763 张原图（2186 × 3317，SHA-1 6f66a0273875e42b8ac5a33dc956eac910408b30；2202 × 3347，SHA-1 45e9b941b3c94496567335cce7bba6efe2056c85）。整页图**未收录**，只把裁切放进转写目录的 evidence/（`p142-143_marks_after_clef_other_pieces.png`、`thumbs_p138-141_marks_after_clef.png`）。
 - 对照本（**未收录、未用于转写**）：Pustet 版 *Compendium Gradualis et Missalis Romani*（Cincinnati: Fr. Pustet, 1893；Harvard 藏本，Google 数字化，Internet Archive `compendiumgradu00churgoog`）图 n629–n630（第 31*–32* 页）。这是 Medicaea 系的版本；扫描是黑白二值化低清图，纽姆无法可靠辨认，没有逐音比对。
