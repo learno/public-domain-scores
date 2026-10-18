@@ -22,6 +22,7 @@
 | Dowland〈Lachrimæ〉（Flow my teares），The Second Booke of Songs（1600）第 II 首，全曲 24 小节：Canto、Basso、鲁特琴谱 | [`transcriptions/dowland-lachrimae/`](transcriptions/dowland-lachrimae/) | [`scans/dowland-lachrimae/`](scans/dowland-lachrimae/)：1600 年伦敦原印本（Boston Public Library 藏本；Internet Archive） | 完整转写；鲁特琴法式指法谱译成实际音高（tenor G 定弦、第 7 弦 D，按低音推定）；歌词未编码 |
 | Handel《犹大·马加比》HWV 63〈See, the conqu'ring hero comes〉合唱版（Full Chorus），全曲 24 小节：合唱四部、长笛 / 小提琴、圆号、双簧管、中提琴、通奏低音 | [`transcriptions/handel-conquering-hwv63/`](transcriptions/handel-conquering-hwv63/) | [`scans/handel-conquering-hwv63/`](scans/handel-conquering-hwv63/)：Randall 总谱 [1769]（北卡罗来纳大学教堂山分校藏本；Internet Archive），另附 Novello 1906 声乐谱一页 | 完整转写，11 个声部；无修正；圆号按 G 调写记谱音高；歌词与通奏低音数字未编码 |
 | 格里高利圣咏〈Dies iræ〉（安魂弥撒继抒咏）第 1–6 节（旋律 A A B B C C） | [`transcriptions/chant-dies-irae/`](transcriptions/chant-dies-irae/) | [`scans/chant-dies-irae/`](scans/chant-dies-irae/)：Pothier《Liber Gradualis》（Tournai: Desclée，1883；BnF 藏本，经 Wikimedia Commons） | 完整转写（192 个音）；方形记谱无时值，每个音记作等长四分音符，纽姆记作连线，含歌词音节；无修正 |
+| Tchaikovsky《四季》Op. 37a 第 4 首〈四月：雪花莲〉，全曲（弱起 + 第 1–86 小节），钢琴独奏 | [`transcriptions/tchaikovsky-april-op37a/`](transcriptions/tchaikovsky-april-op37a/) | [`scans/tchaikovsky-april-op37a/`](scans/tchaikovsky-april-op37a/)：Schirmer 版（Oesterle 编订，©1899；哈佛大学藏本，Google 数字化，Internet Archive） | 完整转写（1366 个音）；已逐小节核实时值与纵向和声，无需修正；踏板、指法、连线未编码，力度与楔形记作文字；几处存疑记号见 README |
 
 每个转写目录里有：
 
@@ -42,10 +43,10 @@ python tools/check.py      # 自查：XML 结构、每小节每声部时值、MI
 ### 授权
 
 - **转写（`transcriptions/`）与工具（`tools/`）**：[CC0 1.0 通用](LICENSE)（公有领域贡献）。不需要署名；如果愿意注明出处，欢迎链接本仓库。
-- **原作**：Dowland（1626 年去世）、Handel（1759 年去世）、Vivaldi（1741 年去世）、Wagner（1883 年去世）、R. Strauss（1949 年去世）、Klindworth（1916 年去世）、Otto Singer（1931 年去世）、John E. West（1929 年去世）的作品，以及中世纪的格里高利圣咏和 Pothier（1923 年去世）编的 1883 年圣咏书，在中国、欧盟、美国均已进入公有领域。
+- **原作**：Dowland（1626 年去世）、Handel（1759 年去世）、Vivaldi（1741 年去世）、Wagner（1883 年去世）、Tchaikovsky（1893 年去世）、R. Strauss（1949 年去世）、Klindworth（1916 年去世）、Otto Singer（1931 年去世）、John E. West（1929 年去世）的作品，以及中世纪的格里高利圣咏和 Pothier（1923 年去世）编的 1883 年圣咏书，在中国、欧盟、美国均已进入公有领域。
 - **扫描图（`scans/`）**：是公有领域印刷乐谱的忠实复制。我们**不对扫描图主张任何权利**，只是按来源机构的说明标注出处：
   - 法国国家图书馆（BnF）藏本，经 Wikimedia Commons 获得，Commons 标注 Public domain，Credit: Bibliothèque nationale de France。BnF 要求注明 **"Source gallica.bnf.fr / BnF"**。BnF Gallica 的使用条件对**商业再利用**另有规定，商业使用前请自行查阅 Gallica 的使用条件。
-  - Internet Archive 上多伦多大学音乐系图书馆、北卡罗来纳大学教堂山分校音乐图书馆、波士顿公共图书馆（Boston Public Library）的数字化藏本。条目没有标注授权字段，原书出版于 1931 年以前，作者均已去世 70 年以上。
+  - Internet Archive 上多伦多大学音乐系图书馆、北卡罗来纳大学教堂山分校音乐图书馆、波士顿公共图书馆（Boston Public Library）的数字化藏本，以及哈佛大学藏本（Google 数字化后上传到 Internet Archive）。条目没有标注授权字段，原书出版于 1931 年以前，作者均已去世 70 年以上。
   - 各目录的 README 逐张列出出处与页码。
   - `transcriptions/*/evidence/` 里的图是上述扫描的裁切（部分叠加了标注音高的辅助线），同样不主张任何权利。
 - 以上是我们的理解，不构成法律意见。
@@ -80,6 +81,7 @@ While making the soundtrack for an indie game, we transcribed four short excerpt
 | Dowland, "Lachrimæ" (Flow my teares), *The Second Booke of Songs* (1600) No. II, complete (24 bars): Canto, Basso and lute tablature | [`transcriptions/dowland-lachrimae/`](transcriptions/dowland-lachrimae/) | [`scans/dowland-lachrimae/`](scans/dowland-lachrimae/): the 1600 London print (Boston Public Library copy; Internet Archive) | Complete; French lute tablature decoded to sounding pitch (tenor G tuning, 7th course D, inferred from the bass); lyrics not encoded |
 | Handel, *Judas Maccabaeus* HWV 63, "See, the conqu'ring hero comes", Full Chorus version, complete (24 bars): chorus SATB, flutes / violins, horns, oboes, viola, continuo | [`transcriptions/handel-conquering-hwv63/`](transcriptions/handel-conquering-hwv63/) | [`scans/handel-conquering-hwv63/`](scans/handel-conquering-hwv63/): Randall full score [1769] (UNC Chapel Hill copy; Internet Archive), plus one page of the Novello 1906 vocal score | Complete, all 11 parts; no corrections; horns in G at written pitch; lyrics and continuo figures not encoded |
 | Gregorian chant, sequence "Dies iræ" (Mass for the Dead), stanzas 1–6 (melodies A A B B C C) | [`transcriptions/chant-dies-irae/`](transcriptions/chant-dies-irae/) | [`scans/chant-dies-irae/`](scans/chant-dies-irae/): Pothier's *Liber Gradualis* (Tournai: Desclée, 1883; BnF copy via Wikimedia Commons) | Complete (192 notes); square notation has no note values, so every note is an equal quarter note; neumes as slurs; lyric syllables included; no corrections |
+| Tchaikovsky, *The Seasons* Op. 37a No. 4, "April" (Snowdrop), complete (upbeat + bars 1–86), solo piano | [`transcriptions/tchaikovsky-april-op37a/`](transcriptions/tchaikovsky-april-op37a/) | [`scans/tchaikovsky-april-op37a/`](scans/tchaikovsky-april-op37a/): Schirmer edition (ed. Oesterle, ©1899; Harvard University copy digitised by Google, Internet Archive) | Complete (1366 notes); durations and vertical harmony checked bar by bar, no corrections needed; pedal, fingering and slurs not encoded, dynamics and hairpins as text; a few doubtful marks listed in the README |
 
 Each transcription folder contains the `.musicxml` (uncompressed MusicXML 4.0, organised by the parts / staves of the source, not by our game orchestration), a `.mid` for listening only (tempo chosen for playback; trills play the main note only), the raw transcription data `source.txt`, the list of corrections `corrections.txt`, the scan crops supporting each correction in `evidence/`, and a `README.md` with the excerpt range, source, method, known issues and comparisons with other digital editions.
 
@@ -88,10 +90,10 @@ Each transcription folder contains the `.musicxml` (uncompressed MusicXML 4.0, o
 ### Licensing
 
 - **Transcriptions (`transcriptions/`) and tools (`tools/`)**: [CC0 1.0 Universal](LICENSE). No attribution required; a link back is appreciated.
-- **The works themselves** (Dowland d. 1626, Handel d. 1759, Vivaldi d. 1741, Wagner d. 1883, R. Strauss d. 1949, Klindworth d. 1916, Otto Singer d. 1931, John E. West d. 1929), the medieval Gregorian chant and the 1883 chant book edited by Joseph Pothier (d. 1923) are in the public domain in China, the EU and the US.
+- **The works themselves** (Dowland d. 1626, Handel d. 1759, Vivaldi d. 1741, Wagner d. 1883, Tchaikovsky d. 1893, R. Strauss d. 1949, Klindworth d. 1916, Otto Singer d. 1931, John E. West d. 1929), the medieval Gregorian chant and the 1883 chant book edited by Joseph Pothier (d. 1923) are in the public domain in China, the EU and the US.
 - **Scans (`scans/`)** are faithful reproductions of public-domain printed music. **We claim no rights in them** and credit them as the holding institutions ask:
   - Bibliothèque nationale de France copies, obtained via Wikimedia Commons (marked Public domain, Credit: Bibliothèque nationale de France). BnF asks for the credit line **"Source gallica.bnf.fr / BnF"**. Gallica's terms of use treat **commercial reuse** separately; check them before any commercial use.
-  - Copies digitised by the Internet Archive from the University of Toronto Faculty of Music Library, the Music Library of the University of North Carolina at Chapel Hill and the Boston Public Library. The items carry no license field; the books were published before 1931 and all authors died more than 70 years ago.
+  - Copies digitised by the Internet Archive from the University of Toronto Faculty of Music Library, the Music Library of the University of North Carolina at Chapel Hill and the Boston Public Library, and a Harvard University copy digitised by Google and uploaded to the Internet Archive. The items carry no license field; the books were published before 1931 and all authors died more than 70 years ago.
   - The README in each scan folder lists source, page and content for every image.
   - Images in `transcriptions/*/evidence/` are crops of these scans (some with pitch guide lines added); we claim no rights in them either.
 - This is our understanding, not legal advice.

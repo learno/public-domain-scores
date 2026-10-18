@@ -32,6 +32,7 @@ RIGHTS = ("Transcription released under CC0 1.0 Universal (public domain dedicat
 #   source.txt 写记谱音高，MusicXML 加 <transpose>，MIDI 按实际音高；fifths=<记谱调号> 覆盖全曲调号。
 #   double_bars=[小节 …] 在该小节末尾画双细线；chant=True 无量记谱（素歌）：音符不画符干、不连符杠，
 #   拍号不打印（小节长度仍由 time / bar_time 决定，只用于排时间轴）。
+#   clef_changes=[(小节, 拍内位置, 谱表号, 谱号), …]（part 级可选）：小节中途或末尾换谱号（拍内位置 = 小节长度即末尾）。
 PIECES = {
     "vivaldi-winter-rv297": dict(
         prefix="winter",
@@ -179,6 +180,29 @@ PIECES = {
         tempo_words=None, midi_qpm=108,
         parts=[
             dict(name="Cantus", abbr="Cant.", program=53, staves=[("G", ["cantus"])]),
+        ],
+    ),
+    "tchaikovsky-april-op37a": dict(
+        prefix="april",
+        work="The Seasons, Op. 37a (Op. 37bis) — No. 4 \"April\" (Perce-neige / Snowdrop)",
+        movement="Allegretto con moto, e un poco rubato (complete: upbeat and bars 1–86)",
+        creators=[("composer", "Pyotr Ilyich Tchaikovsky")],
+        source="The Seasons, Op. 37 [37bis], edited and fingered by Louis Oesterle, New York: G. Schirmer, ©1899, plate 21360 "
+               "(Harvard University copy digitized by Google, Internet Archive), pp. 16–19 "
+               "(leaves n22–n25). Pedal marks, fingering and slurs not encoded.",
+        time=(6, 8), fifths=-2, mode="major", bars=(0, 86), pickup=F(1, 2),
+        double_bars=[58], final_barline=True,
+        tempo_words="Allegretto con moto, e un poco rubato", midi_qpm=108, encoding_date="2026-10-19",
+        parts=[
+            dict(name="Piano", abbr="Pno.", program=1, staves=[("G", ["rh", "rh2"]), ("F", ["lh", "lh2"])],
+                 # (小节, 拍内位置, 谱表, 谱号)：原谱的换谱号（拍内位置 = 小节长度 表示画在小节末尾）
+                 clef_changes=[(0, 0.5, 2, "G"), (5, 3, 2, "F"),
+                               (8, 3, 1, "F"), (12, 2.5, 1, "G"), (16, 3, 1, "F"), (20, 2.5, 1, "G"),
+                               (32, 3, 2, "G"), (33, 3, 2, "F"), (34, 3, 2, "G"), (35, 3, 2, "F"),
+                               (39, 3, 1, "F"), (40, 3, 1, "G"),
+                               (48, 3, 2, "G"), (49, 3, 2, "F"), (50, 3, 2, "G"), (51, 3, 2, "F"),
+                               (66, 3, 1, "F"), (70, 2.5, 1, "G"),
+                               (78, 3, 2, "G"), (85, 3, 2, "F")]),
         ],
     ),
 }
@@ -553,6 +577,10 @@ def export_piece(key: str, cfg: dict) -> dict:
                                 p.get("transpose", (0, 0))[1]))
         pfifths = p.get("fifths", cfg["fifths"])
         kalt_p = key_alter(pfifths)
+        # 换谱号（part 级可选）：clef_changes=[(小节, 拍内位置, 谱表号 1…, 谱号), …]，写在该谱表第一个声部里
+        clef_chg = {}
+        for cb, cbeat, cst, cclef in p.get("clef_changes", ()):
+            clef_chg.setdefault((cb, cst - 1), []).append((F(cbeat), cclef))
         for bar in g.bars():
             b0, blen = g.start(bar), g.length(bar)
             b1 = b0 + blen
@@ -659,6 +687,7 @@ def export_piece(key: str, cfg: dict) -> dict:
                     if not tied and n.alter != cur:
                         show[(id(n), t_)] = {1: "sharp", -1: "flat", 0: "natural", 2: "double-sharp", -2: "flat-flat"}[n.alter]
                     state[keyk] = n.alter
+                pend = sorted(clef_chg.pop((bar, si), []))
                 for vi, segs in plans:
                     voice = si * 4 + vi + 1
                     if first_voice_written:
@@ -666,6 +695,10 @@ def export_piece(key: str, cfg: dict) -> dict:
                     first_voice_written = True
                     beams = {} if chant else _beam_plan(segs, beat, b0)
                     for idx, sg in enumerate(segs):
+                        if pend and vi == plans[0][0]:
+                            st_ = b0 if sg[0] == "mrest" else (sg[1] if sg[0] == "rest" else sg[2])
+                            while pend and st_ >= b0 + pend[0][0]:
+                                _clef_attr(m, pend.pop(0)[1], si + 1 if nst > 1 else None)
                         if sg[0] == "mrest":
                             ne = sub(m, "note")
                             sub(ne, "rest", measure="yes")
@@ -784,6 +817,10 @@ def export_piece(key: str, cfg: dict) -> dict:
                                         orn = sub(no, "ornaments")
                                         sub(orn, "tremolo", it.beams - nb, type=which)
                                     stats["heads_written"] += 1
+                    if pend and vi == plans[0][0]:          # 小节末尾的换谱号
+                        for _, cclef in pend:
+                            _clef_attr(m, cclef, si + 1 if nst > 1 else None)
+                        pend = []
                 # 一个谱表都没有声部内容时（不会发生：第一声部总会写）
             if not first_voice_written:
                 raise DataError(f"{key}: empty measure {bar}")
@@ -805,6 +842,16 @@ def export_piece(key: str, cfg: dict) -> dict:
     (d / f"{key}.musicxml").write_text(xml, encoding="utf-8", newline="\n")
     (d / f"{key}.mid").write_bytes(build_midi(cfg, g, midi_tracks))
     return stats
+
+
+def _clef_attr(m, clef: str, number):
+    at = sub(m, "attributes")
+    c = sub(at, "clef", **({"number": number} if number else {}))
+    sign, line = {"G": ("G", 2), "G8": ("G", 2), "F": ("F", 4), "C3": ("C", 3)}[clef]
+    sub(c, "sign", sign)
+    sub(c, "line", line)
+    if clef == "G8":
+        sub(c, "clef-octave-change", -1)
 
 
 def _dur(d: F, divisions: int):
