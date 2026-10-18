@@ -7,8 +7,8 @@
 | `dowland-lachrimae.musicxml` | MusicXML 4.0（未压缩），3 个声部：Canto、Lute（实际音高，低八度高音谱号）、Basso |
 | `dowland-lachrimae.mid` | 标准 MIDI，仅供试听：♩ = 100（原谱没有速度标记，这是自定的回放速度）；反复不展开 |
 | `source.txt` | 转写原始数据（文件头写明底本、定弦与指法谱约定） |
-| `corrections.txt` | 修正清单（1 条编辑性升号，见「临时记号」） |
-| `evidence/` | 疑点处的扫描谱裁切图 |
+| `corrections.txt` | 修正清单（2 条编辑性修正：第 23 小节 Canto 升号；第 19 小节 Basso 补一个四分音符） |
+| `evidence/` | 疑点处的扫描谱裁切图（文件名带 `_bpl` / `_eebo` 的是两本藏本的对照图） |
 
 ## 范围
 
@@ -18,13 +18,20 @@
 
 ## 底本
 
-John Dowland, *The Second Booke of Songs or Ayres*, London: Thomas Este for George Eastland, 1600，第 II 首。Boston Public Library 藏本（索书号 G.400.52），Internet Archive `secondbookeofson00dowl`。见 [`../../scans/dowland-lachrimae/`](../../scans/dowland-lachrimae/)：
+John Dowland, *The Second Booke of Songs or Ayres*, London: Thomas Este for George Eastland, 1600，第 II 首。Boston Public Library 藏本（索书号 G.400.52），Internet Archive `secondbookeofson00dowl`。见 [`../../scans/dowland-lachrimae/`](../../scans/dowland-lachrimae/)。
+
+**A 本**（BPL，彩色扫描，主要底本）：
+
 
 | 声部 | 扫描图 | 说明 |
 |---|---|---|
 | Canto + 鲁特琴谱 | `secondbookeofson00dowl_n13.jpg` | 5 行（第 1–21 小节、第 22 小节前半），C1 谱号；每行 Canto 下面是法式指法谱 |
 | Basso | `secondbookeofson00dowl_n14.jpg` | 印成**横排旋转 90°**（与 Canto 页对开，给坐在桌子侧面的人读）；顺时针转 90° 后是 5 行，F4 谱号 |
 | Canto + 鲁特琴谱末行 | `secondbookeofson00dowl_n14.jpg` 页脚 | 第 22 小节后半至第 24 小节（"that in hell feele not the worlds despite"），正向排印 |
+
+**B 本**（对照用）：同书 EEBO 缩微胶片的黑白扫描，Internet Archive `bim_early-english-books-1641-1700_the-second-booke-of-song_dowland-john_1600`，页 n9 = CANTO 页（对应 A 本 n13）、n10 = BASSO 页（对应 A 本 n14）。IA 元数据注明数字化自缩微胶片 IA40313011-23，没有说明原书藏馆。文件为 `eebo_n9.jpg`、`eebo_n10.jpg`。
+
+两本在下列所有疑点处的印面完全相同，没有停机改版（同一版内换活字）的迹象；唯一的差别是 A 本个体上的墨迹瑕疵（见「已知问题」第 21 小节鲁特琴一行）。
 
 ## 转写方法
 
@@ -58,7 +65,7 @@ John Dowland, *The Second Booke of Songs or Ayres*, London: Thomas Este for Geor
 | | 22 后半 + 23 | 16 |
 | 至终止线 | 24 | 8 |
 
-第 21 小节第 3 个四分音符处另有一道只穿过上三条弦线的细竖线（[`lute_m21_thin_stroke.png`](evidence/lute_m21_thin_stroke.png)），不在任何小节边界上，按印刷瑕疵处理。鲁特琴谱末尾是带点的反复记号，Canto 末尾是普通终止线；本转写只按要求在第 8、16 小节画反复记号，第 24 小节画终止线。
+第 21 小节第 3 个四分音符处在 A 本上另有一道只穿过上三条弦线的细竖线（[`lute_m21_stroke_bpl.png`](evidence/lute_m21_stroke_bpl.png)），不在任何小节边界上；B 本同处没有（[`lute_m21_stroke_eebo.png`](evidence/lute_m21_stroke_eebo.png)），所以是 A 本个体瑕疵，不是活字。鲁特琴谱末尾是带点的反复记号，Canto 末尾是普通终止线；本转写只按要求在第 8、16 小节画反复记号，第 24 小节画终止线。
 
 ## 鲁特琴定弦与指法谱读法
 
@@ -85,23 +92,24 @@ John Dowland, *The Second Booke of Songs or Ayres*, London: Thomas Este for Geor
 
 原印本的升号只在印出处编码（`source.txt`），编辑性的另写进 `corrections.txt`：
 
-- **第 7 小节**（"shame disclose" 处的终止）：Canto 的 G quaver 与 G minim **下方**（谱表外、C4 线高度）各印一个 ✱，记作 G♯4；中间的 F quaver 没有符号，照印记作 F♮4。[`canto_m07_sharps_below_staff.png`](evidence/canto_m07_sharps_below_staff.png)
-- **第 23 小节**（"despite" 前的终止）：只在 G quaver 前印 ✱（G♯4），F quaver 与随后的 G minim 都没有符号。`corrections.txt` C1 按第 7 小节同一音型（两个 G 都升）给第二个 G 补升号（编辑性）；F 照印保持 F♮。[`canto_m23_sharp_before_G.png`](evidence/canto_m23_sharp_before_G.png)
+- **第 7 小节**（"shame disclose" 处的终止）：Canto 的 G quaver 与 G minim **下方**（谱表外、C4 线高度）各印一个 ✱，记作 G♯4；中间的 F quaver 没有符号，照印记作 F♮4。两本相同。[`canto_m07_sharps_below_staff.png`](evidence/canto_m07_sharps_below_staff.png)（A）、[`canto_m07_bpl.png`](evidence/canto_m07_bpl.png) / [`canto_m07_eebo.png`](evidence/canto_m07_eebo.png)
+- **第 23 小节**（"despite" 前的终止）：只在 G quaver 前印 ✱（G♯4），F quaver 与随后的 G minim 都没有符号。`corrections.txt` C1 按第 7 小节同一音型（两个 G 都升）给第二个 G 补升号（编辑性）；F 照印保持 F♮。两本都只有第一个 G 前有升号。[`canto_m23_sharp_before_G.png`](evidence/canto_m23_sharp_before_G.png)、[`canto_m23_bpl.png`](evidence/canto_m23_bpl.png) / [`canto_m23_eebo.png`](evidence/canto_m23_eebo.png)
 - 鲁特琴在这两处都只弹 E 与 B（没有三音），帮不上判断。
 - 其他升号（第 2、5、6、11、16、17、18、20、23 小节 Canto 的 G♯，第 11 小节 Basso 的 C♯，第 15 小节 Basso 的 G♯）都是印出来的；Basso 的 C♯3、G♯2 与鲁特琴同时刻的低音相同。
 
 ## 已知问题与不确定处
 
-| 小节 | 声部 | 问题 | 证据图 |
+| 小节 | 声部 | 问题与两本（A = BPL，B = EEBO）对照结论 | 证据图 |
 |---|---|---|---|
-| 7、23 | Canto | 终止处 F 是否升高（演唱习惯常唱 F♯；原印本没有符号，照印为 F♮）；第 23 小节第二个 G 的升号是编辑补的 | `canto_m07_sharps_below_staff.png`、`canto_m23_sharp_before_G.png` |
-| 16 | 鲁特琴 | 第 3 个 minim 拍的 E 大三和弦（E2 E3 G♯3 B3 E4）里，第 6 弦印的是 c（= A2），与和声不合，可能是 e（= B2）的误植；照印保留 | `lute_m16_beat0_beat4_chords.png` |
-| 21 | Canto | 第 3 个四分音符起的高音读作 E5：音头最宽处在最上一线（D5）上方一个音级，没有加线，不是 F5 | `canto_m21_E5.png` |
-| 1 | Basso | 第二个 semibreve 读作 A2（与第一个同高；鲁特琴同时刻是 A2） | `basso_m01_A2_A2.png` |
+| 7、23 | Canto | 第 7 小节两个 ✱ 印在谱表下方、分别对着两个 G，F 无记号；第 23 小节只有第一个 G 前有 ✱。A、B 全同。终止处 F 是否升高（演唱习惯常唱 F♯）属编辑判断，照印为 F♮；第 23 小节第二个 G 的升号是编辑补的（`corrections.txt` C1） | `canto_m07_bpl/eebo.png`、`canto_m23_bpl/eebo.png` |
+| 16 | 鲁特琴 | 第 3 个 minim 拍的 E 大三和弦（E2 E3 G♯3 B3 E4）里，第 6 弦印的是 c（= A2），与和声不合，可能是 e（= B2）的误植。A、B 两本第 6 弦字母都与上面第 2、3 弦的 c 同形、不是 e；两本都不提供改版证据，照印保留 | `lute_m16_full_bpl/eebo.png` |
+| 19 | Basso | **原印本缺一个四分音符**：两本都只印了附点二分 A2 → **一个**四分 G3（音头略高，上方有窄墨块，但只有一根符干、一个音头）→ 四分 E3（A 本着墨淡，B 本清楚）→ 二分 F3，合计 7 拍。`source.txt` 照印这 7 拍，A3 是编辑性补入（`corrections.txt` C2：依据同一时刻鲁特琴拍位 3 的 A3 与后续 G3 E3 F3，三份现代电子谱也都是 A3 G3 E3 F3） | `basso_m19_overview_bpl/eebo.png`、`basso_m19_heads_bpl/eebo.png`、`basso_m19_crotchet_E3.png` |
+| 21 | Canto | 第 3 个四分音符起的高音读作 E5：两本音头中心都在最上线（D5）上方约 0.6 个线距，没有加线，不是 F5 | `canto_m21_top_bpl/eebo.png`、`canto_m21_E5.png` |
+| 21 | 鲁特琴 | 只穿过上三条弦线的细竖线：A 本有、B 本没有 → A 本个体瑕疵，不在活字里，不编码 | `lute_m21_stroke_bpl/eebo.png` |
+| 1 | Basso | 第二个 semibreve 读作 A2（与第一个同高；鲁特琴同时刻是 A2）。两本相同 | `basso_m01_bpl/eebo.png`、`basso_m01_A2_A2.png` |
 | 12 | Basso | D2 带一条加线；两个 F2 挂在最下一线下方（不需要加线）。与鲁特琴第 7 弦同时刻的 D2 / F2 相合，核实无误 | `basso_m12_D2_F2_F2.png` |
-| 15 | Basso | 第 1 个音读作 A2（音头最宽处），随后 G♯2 | `basso_m14-15_A2_Gsharp2.png` |
-| 19 | Basso | 第 6 个四分音符的 E3 音头着墨很淡，按时值凑小节读作 crotchet | `basso_m19_crotchet_E3.png` |
-| 22 | Basso | G2 后面的小黑点是谱线残墨，不是附点：G2、F2 各一个 minim | `basso_m22_G2_F2_no_dot.png` |
+| 15 | Basso | A2 附点二分 → ✱ G♯2 → A2 → 附点四分 F2 → 八分 F2；第 1 个音读作 A2（音头最宽处）。两本相同 | `basso_m15_bpl/eebo.png`、`basso_m14-15_A2_Gsharp2.png` |
+| 22 | Basso | G2 后面的小黑点不是附点：A 本是活字谱线接缝（与上方四条线的短墨块成一列），B 本同处是一段短横。G2、F2 各一个 minim | `basso_m22_dash_bpl/eebo.png`、`basso_m22_G2_F2_no_dot.png` |
 | 5、6 | Basso | 第 5 小节两个 A3 quaver、第 6 小节两个 F3 quaver 上有括号，是为配合两段歌词的不同音节分开的音，照印编码为两个 quaver | — |
 | 8 | Canto | 终止音是空心方形 breve A4（与第 16、24 小节同形），不是休止 | `canto_m08_breve_A4.png` |
 

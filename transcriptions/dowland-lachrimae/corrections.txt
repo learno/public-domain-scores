@@ -9,3 +9,11 @@
 #    Canto bar 23, minim G before the final A: editorial sharp by analogy with bar 7 (both Gs sharpened there).
 #    证据 evidence: canto_m23_sharp_before_G.png, canto_m07_sharps_below_staff.png
 lachrimae.canto 23: 10:G4/2 => 10:G#4/2
+
+# C2 Basso 第 19 小节：原印本少印一个四分音符（编辑性补入 A3）。
+#    两本实物（BPL 彩色扫描 n14、EEBO 缩微 n10）印面一致：附点二分 A2 → 一个四分 G3（音头略高，上方有窄墨块，
+#    但只有一根符干、一个音头）→ 四分 E3 → 二分 F3，合计 7 拍，差一拍。
+#    补入的 A3 依据：同一时刻鲁特琴拍位 3 为 A3，拍位 4–6 为 G3 E3 F3，与印出的后三个音吻合；三份现代电子谱也都是 A3 G3 E3 F3。
+#    Basso bar 19: the print (both copies) has only 7 beats; the crotchet A3 on beat 3 is editorial (cf. lute, and modern editions).
+#    证据 evidence: basso_m19_overview_bpl.png, basso_m19_overview_eebo.png, basso_m19_heads_bpl.png, basso_m19_heads_eebo.png
+lachrimae.basso 19: 3:G3/1 4:E3/1 5:F3/2 => 3:A3/1 4:G3/1 5:E3/1 6:F3/2
