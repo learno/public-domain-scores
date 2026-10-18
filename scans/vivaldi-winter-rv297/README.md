@@ -1,10 +1,10 @@
 # 扫描底本：Vivaldi《四季》〈冬〉RV 297（Op. 8 No. 4）
 
-转写见 [`../../transcriptions/vivaldi-winter-rv297/`](../../transcriptions/vivaldi-winter-rv297/)（第一乐章）与 [`../../transcriptions/vivaldi-winter-rv297-largo/`](../../transcriptions/vivaldi-winter-rv297-largo/)（第二乐章 Largo）。本目录的图片都是 Wikimedia Commons 上的原始文件，未做裁切或修图，文件大小与 Commons 一致。
+转写见 [`../../transcriptions/vivaldi-winter-rv297/`](../../transcriptions/vivaldi-winter-rv297/)（第一乐章）与 [`../../transcriptions/vivaldi-winter-rv297-largo/`](../../transcriptions/vivaldi-winter-rv297-largo/)（第二乐章 Largo）。本目录的图片除 `btv525002255_p019.jpg`（取自 IMSLP 的 PDF，见 2c）外都是 Wikimedia Commons 上的原始文件，未做裁切或修图，文件大小与 Commons 一致。
 
 ## 出处与授权 / Source and rights
 
-所有图片的原件都藏于**法国国家图书馆**（Bibliothèque nationale de France），由 BnF Gallica 数字化，经 Wikimedia Commons 下载（2026-10-06）。
+所有图片的原件都藏于**法国国家图书馆**（Bibliothèque nationale de France），由 BnF Gallica 数字化，经 Wikimedia Commons 下载（2026-10-06；2c 一页经 IMSLP，2026-10-19）。
 
 - Commons 标注：**Public domain**；Credit: **Bibliothèque nationale de France**。
 - BnF 要求的署名：**Source gallica.bnf.fr / BnF**。
@@ -64,5 +64,15 @@ Source: Bibliothèque nationale de France (Gallica), via Wikimedia Commons, publ
 | `bpt_p028.jpg` | 28 / 40 | Violino Principale | 14 | Concerto IV "L'Inverno" 第一乐章开头（附十四行诗诗句） |
 | `bpt_p029.jpg` | 29 / 40 | Violino Principale | 15 | 第一乐章续至结束 |
 | `bpt_p030.jpg` | 30 / 40 | Violino Principale | 16 | 第二乐章 Largo（E）、第三乐章 Allegro（F）开头（Largo 第 16 小节附点的对照） |
+
+### 2c. BnF `btv1b525002255`（本目录 `btv525002255_p*.jpg`，**不是** Commons 文件）
+
+- 与 2a 同一套 Le Cène 版分谱（BnF 同一藏本的另一册：Violino Secondo）；页脚版号 520。Commons 上没有这一册。
+- 来源：IMSLP 上该册的 PDF（IMSLP #399134，`PMLP12653--VM7-1703-_Concerti_Op.8_Violino_Secondo.pdf`，85,605,448 字节，扫描 = BnF `ark:/12148/btv1b525002255`；https://imslp.org/wiki/Il_cimento_dell'armonia_e_dell'inventione,_Op.8_(Vivaldi,_Antonio) ），2026-10-19 由用户手动下载。只收需要的一页：从 PDF 取出内嵌的 JPEG 2000 原图（3830 × 5178，未裁切、未修图），转存为 JPEG（质量 90），所以与上面几节不同，文件不是原样字节。
+- 授权与署名同上（BnF 藏品，公有领域；"Source gallica.bnf.fr / BnF"）。
+
+| 文件 | PDF 页序 | 分谱 | 印刷页码 | 内容 |
+|---|---|---|---|---|
+| `btv525002255_p019.jpg` | 19 / 44 | Violino Secondo | 13 | Concerto IV 第一乐章结尾；第 5 行中间起第二乐章 Largo（F，"Largo Pizziccati Forte"）至页末（Largo 转写第二小提琴第 14 小节修正 C1 的对照） |
 
 「内容」一栏是按页眉、排练字母目测填写的，没有逐小节核对。
