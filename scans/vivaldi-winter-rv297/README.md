@@ -1,6 +1,6 @@
 # 扫描底本：Vivaldi《四季》〈冬〉RV 297（Op. 8 No. 4）
 
-转写见 [`../../transcriptions/vivaldi-winter-rv297/`](../../transcriptions/vivaldi-winter-rv297/)。本目录的图片都是 Wikimedia Commons 上的原始文件，未做裁切或修图，文件大小与 Commons 一致。
+转写见 [`../../transcriptions/vivaldi-winter-rv297/`](../../transcriptions/vivaldi-winter-rv297/)（第一乐章）与 [`../../transcriptions/vivaldi-winter-rv297-largo/`](../../transcriptions/vivaldi-winter-rv297-largo/)（第二乐章 Largo）。本目录的图片都是 Wikimedia Commons 上的原始文件，未做裁切或修图，文件大小与 Commons 一致。
 
 ## 出处与授权 / Source and rights
 
@@ -24,18 +24,18 @@ Source: Bibliothèque nationale de France (Gallica), via Wikimedia Commons, publ
 |---|---|---|---|---|
 | `hue_p017.jpg` | 017 / 176 | Violino Principale | 14 | Concerto IV "L'Inverno" 第一乐章 Allegro non molto 开头（**转写第 1–18 小节**） |
 | `hue_p018.jpg` | 018 / 176 | Violino Principale | 15 | 第一乐章续至结束（页末 "Volti"） |
-| `hue_p019.jpg` | 019 / 176 | Violino Principale | 16 | 第二乐章 Largo（E），第三乐章 Allegro（F）开头 |
+| `hue_p019.jpg` | 019 / 176 | Violino Principale | 16 | 第二乐章 Largo（E，**Largo 转写所用**），第三乐章 Allegro（F）开头 |
 | `hue_p065.jpg` | 065 / 176 | Violino Primo | 12 | 第一乐章开头（**转写所用**） |
-| `hue_p066.jpg` | 066 / 176 | Violino Primo | 13 | 第一乐章续（未逐行核对） |
+| `hue_p066.jpg` | 066 / 176 | Violino Primo | 13 | 第一乐章续；第 5 行中间起第二乐章 Largo（E）至页末（**Largo 转写所用**） |
 | `hue_p067.jpg` | 067 / 176 | Violino Primo | 14 | 第三乐章 Allegro（F） |
 | `hue_p099.jpg` | 099 / 176 | Violino Secondo | 12 | 第一乐章开头（**转写所用**） |
-| `hue_p100.jpg` | 100 / 176 | Violino Secondo | 13 | 第一乐章续（未逐行核对） |
+| `hue_p100.jpg` | 100 / 176 | Violino Secondo | 13 | 第一乐章续；第 5 行中间起第二乐章 Largo（E，"Pizziccati"）至页末（**Largo 转写所用**） |
 | `hue_p101.jpg` | 101 / 176 | Violino Secondo | 14 | 第三乐章 Allegro（F） |
 | `hue_p127.jpg` | 127 / 176 | Alto Viola | 8 | 第一乐章（**转写所用**） |
-| `hue_p128.jpg` | 128 / 176 | Alto Viola | 9 | 第二乐章 Largo（E）、第三乐章（F 起） |
+| `hue_p128.jpg` | 128 / 176 | Alto Viola | 9 | 第二乐章 Largo（E，第 1 行，**Largo 转写所用**）、第三乐章（F 起） |
 | `hue_p129.jpg` | 129 / 176 | Alto Viola | 10 | 下一首 Concerto V "La Tempesta di Mare" 开头（不属〈冬〉） |
 | `hue_p153.jpg` | 153 / 176 | Organo e Violoncello | 9 | 第一乐章，带数字低音（**转写所用**；第 5 小节 E♮ 的依据在第二行首小节） |
-| `hue_p154.jpg` | 154 / 176 | Organo e Violoncello | 10 | 第二乐章 Largo（E，"Sempre Piano"）起 |
+| `hue_p154.jpg` | 154 / 176 | Organo e Violoncello | 10 | 第二乐章 Largo（E，"Sempre Piano"，第 1–3 行，**Largo 转写所用**），第三乐章起 |
 | `hue_p155.jpg` | 155 / 176 | Organo e Violoncello | 11 | 下一首 Concerto V "Tempesta di mare" 开头（不属〈冬〉） |
 
 ## 2. Le Cène 版，Amsterdam（未用于转写，供对照）
@@ -63,6 +63,6 @@ Source: Bibliothèque nationale de France (Gallica), via Wikimedia Commons, publ
 |---|---|---|---|---|
 | `bpt_p028.jpg` | 28 / 40 | Violino Principale | 14 | Concerto IV "L'Inverno" 第一乐章开头（附十四行诗诗句） |
 | `bpt_p029.jpg` | 29 / 40 | Violino Principale | 15 | 第一乐章续至结束 |
-| `bpt_p030.jpg` | 30 / 40 | Violino Principale | 16 | 第二乐章 Largo（E）、第三乐章 Allegro（F）开头 |
+| `bpt_p030.jpg` | 30 / 40 | Violino Principale | 16 | 第二乐章 Largo（E）、第三乐章 Allegro（F）开头（Largo 第 16 小节附点的对照） |
 
 「内容」一栏是按页眉、排练字母目测填写的，没有逐小节核对。

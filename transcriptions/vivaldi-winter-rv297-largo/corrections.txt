@@ -1,0 +1,13 @@
+# 修正清单 Corrections（导出时套在 source.txt 之上；旧 token 必须逐个精确匹配，否则导出报错）
+# 格式 Format:  <part> <小节>: <旧 token …> => <新 token …>      （新 token 写 "-" 表示只删除）
+# 每条前面用注释写明依据（扫描页、位置）。Give the evidence (scan page / position) in a comment above each entry.
+# 2026-10-18 对照 Hue 1739 分谱扫描核实（独奏另对照 Le Cène 版 bpt_p030）。证据图在 evidence/。
+
+# C1 第二小提琴第 14 小节第 2 拍：Hue 印 B♭4 D5 F5 B♭4（与第 1 拍相同），编辑性改为 B♭4 E♭5 G5 B♭4。
+#    依据（都在本套 Hue 扫描上）：同一拍第一小提琴印 E♭5 G5 B♭5 E♭5、独奏印 G5 A♭5 B♭5 G5，都是 E♭ 和弦（低音 B♭2 持续），
+#    照印则第二小提琴的 D5 / F5 与它们的 E♭ / G 同时响；第 15 小节同一位置（同一音型的重复）第二小提琴印 B♭4 E♭5 G5 B♭4。
+#    疑为刻版时照抄了第 1 拍。Le Cène 版第二小提琴分谱没有核对（本仓库未收该页）。
+#    Violino Secondo bar 14, beat 2: printed Bb4 D5 F5 Bb4 (a repeat of beat 1); editorially Bb4 Eb5 G5 Bb4,
+#    as in the parallel bar 15 and in agreement with Violino Primo and the solo part on the same beat (E-flat chord over the B-flat pedal).
+#    证据 evidence: vln2_m14_beat2_hue.png, vln2_m15_beat2_hue.png, vln1_m14_hue.png
+winter_largo.vln2 14: 1.25:D5/0.25 1.5:F5/0.25 => 1.25:Eb5/0.25 1.5:G5/0.25

@@ -46,6 +46,23 @@ PIECES = {
             dict(name="Organo e Violoncello", abbr="Org. e Vc.", program=43, staves=[("F", ["bc"])]),
         ],
     ),
+    "vivaldi-winter-rv297-largo": dict(
+        prefix="winter_largo",
+        work="Il cimento dell'armonia e dell'inventione, Op. 8 — Concerto IV in F minor \"L'Inverno\", RV 297",
+        movement="II. Largo (complete, bars 1–18)",
+        creators=[("composer", "Antonio Vivaldi")],
+        source="Partbooks, Paris: engraved by Hue, 1739 (Bibliothèque nationale de France, Gallica ark:/12148/btv1b9062998d), "
+               "via Wikimedia Commons. Manual transcription from scans/vivaldi-winter-rv297/hue_p019, p066, p100, p128, p154.",
+        time=(4, 4), fifths=-3, mode="major", bars=(1, 18), pickup=None, final_barline=True,
+        tempo_words="Largo", midi_qpm=48, encoding_date="2026-10-18",
+        parts=[
+            dict(name="Violino Principale", abbr="Vl. princ.", program=41, staves=[("G", ["solo"])]),
+            dict(name="Violino Primo", abbr="Vl. I", program=46, staves=[("G", ["vln1"])]),
+            dict(name="Violino Secondo", abbr="Vl. II", program=46, staves=[("G", ["vln2"])]),
+            dict(name="Alto Viola", abbr="Va.", program=42, staves=[("C3", ["vla"])]),
+            dict(name="Organo e Violoncello", abbr="Org. e Vc.", program=43, staves=[("F", ["bc"])]),
+        ],
+    ),
     "vivaldi-autumn-rv293": dict(
         prefix="autumn",
         work="Il cimento dell'armonia e dell'inventione, Op. 8 — Concerto III in F major \"L'Autunno\", RV 293",
@@ -117,7 +134,7 @@ PIECES = {
 }
 
 # ───────────────────────────── 读数据 ─────────────────────────────
-TOK = re.compile(r"^([0-9.]+):([A-G])(#|b)?(-?\d)/(\d+(?:\.\d+)?)((?:tr|TA\d|TB\d|[.>])*)$")
+TOK = re.compile(r"^([0-9.]+):([A-G])(#|b)?(-?\d)/(\d+(?:\.\d+)?)((?:tr|TA\d|TB\d|fer|[.>])*)$")
 STEP_PC = {"C": 0, "D": 2, "E": 4, "F": 5, "G": 7, "A": 9, "B": 11}
 
 
@@ -188,13 +205,14 @@ def apply_corrections(path: Path, prefix: str, sects: dict) -> list:
 
 
 class Note:
-    __slots__ = ("on", "dur", "step", "alter", "octave", "stacc", "acc", "trill", "trem", "trem_beams")
+    __slots__ = ("on", "dur", "step", "alter", "octave", "stacc", "acc", "trill", "fermata", "trem", "trem_beams")
 
     def __init__(self, on, dur, step, alter, octave, flags):
         self.on, self.dur, self.step, self.alter, self.octave = on, dur, step, alter, octave
         self.stacc = "." in flags
         self.acc = ">" in flags
         self.trill = "tr" in flags
+        self.fermata = "fer" in flags
         m = re.search(r"T([AB])(\d)", flags)
         self.trem = m.group(1) if m else None
         self.trem_beams = int(m.group(2)) if m else 0
@@ -597,7 +615,7 @@ def export_piece(key: str, cfg: dict) -> dict:
                                 if tstart:
                                     nots.append(("tied", "start"))
                                     stats["ties"] += 1
-                                if nots or (n.trill and not tstop) or ((n.stacc or n.acc) and not tstop):
+                                if nots or (n.trill and not tstop) or ((n.stacc or n.acc) and not tstop) or (n.fermata and not tstart):
                                     no = sub(ne, "notations")
                                     for tag, tv in nots:
                                         sub(no, tag, type=tv)
@@ -610,6 +628,8 @@ def export_piece(key: str, cfg: dict) -> dict:
                                             sub(ar, "accent")
                                         if n.stacc:
                                             sub(ar, "staccato")
+                                    if n.fermata and not tstart and j == 0:   # 延长记号画在连音线的最后一段
+                                        sub(no, "fermata", type="upright")
                                 stats["heads_written"] += 1
                         elif sg[0] == "trem":
                             _, it, s0, s1 = sg
