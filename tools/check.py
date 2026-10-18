@@ -28,7 +28,8 @@ def check_musicxml(path: Path) -> tuple[list, dict]:
     parts = root.findall("part")
     if [p.get("id") for p in parts] != part_ids:
         errs.append("part-list ids do not match parts")
-    st = dict(parts=len(parts), measures=None, heads=0, rests=0, trills=0, tremolo_notes=0, ties=0, measure_numbers=None)
+    st = dict(parts=len(parts), measures=None, heads=0, rests=0, trills=0, tremolo_notes=0, ties=0, slurs=0, lyrics=0,
+              measure_numbers=None)
     for part in parts:
         div = None
         beats = beat_type = None
@@ -38,7 +39,7 @@ def check_musicxml(path: Path) -> tuple[list, dict]:
             st["measures"], st["measure_numbers"] = len(measures), (nums[0], nums[-1])
         elif st["measures"] != len(measures):
             errs.append(f"{part.get('id')}: measure count differs")
-        open_ties = {}
+        open_ties, open_slurs = {}, {}
         for m in measures:
             at = m.find("attributes")
             if at is not None:
@@ -85,6 +86,16 @@ def check_musicxml(path: Path) -> tuple[list, dict]:
                         if "start" in types:
                             open_ties[key] = True
                             st["ties"] += 1
+                        for sl in el.findall("notations/slur"):
+                            k = (el.findtext("voice"), sl.get("number", "1"))
+                            if sl.get("type") == "start":
+                                if k in open_slurs:
+                                    errs.append(f"{part.get('id')} m{m.get('number')}: slur {k} started twice")
+                                open_slurs[k] = True
+                                st["slurs"] += 1
+                            elif sl.get("type") == "stop" and not open_slurs.pop(k, None):
+                                errs.append(f"{part.get('id')} m{m.get('number')}: slur stop without start {k}")
+                        st["lyrics"] += len(el.findall("lyric"))
                         if el.find("notations/ornaments/trill-mark") is not None:
                             st["trills"] += 1
                         if el.find("notations/ornaments/tremolo") is not None or el.find("time-modification") is not None:
@@ -108,6 +119,8 @@ def check_musicxml(path: Path) -> tuple[list, dict]:
                             f"!= {expected / div} quarters")
         if open_ties:
             errs.append(f"{part.get('id')}: unterminated ties {list(open_ties)}")
+        if open_slurs:
+            errs.append(f"{part.get('id')}: unterminated slurs {list(open_slurs)}")
     return errs, st
 
 
@@ -191,7 +204,8 @@ def main() -> int:
         errs, st = check_musicxml(xmlp)
         print(f"{xmlp.relative_to(ROOT)}: {'OK' if not errs else 'FAIL'} — parts {st['parts']}, measures {st['measures']} "
               f"({st['measure_numbers'][0]}–{st['measure_numbers'][1]}), note heads {st['heads']}, rests {st['rests']}, "
-              f"ties {st['ties']}, trill marks {st['trills']}, tremolo note heads {st['tremolo_notes']}")
+              f"ties {st['ties']}, trill marks {st['trills']}, tremolo note heads {st['tremolo_notes']}"
+              + (f", slurs {st['slurs']}, lyric syllables {st['lyrics']}" if st["slurs"] or st["lyrics"] else ""))
         for e in errs[:20]:
             print("   ", e)
         bad += bool(errs)

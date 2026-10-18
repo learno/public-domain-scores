@@ -28,6 +28,8 @@ RIGHTS = ("Transcription released under CC0 1.0 Universal (public domain dedicat
 # staves: [(谱号, [source.txt 段名后缀 …]), …]；clef = G / F / C3（中音谱号）/ G8（低八度高音谱号）
 # 可选 optional: bar_time={小节: (拍数, 拍值)} 个别小节换拍号；repeats=[小节 …] 在该小节末尾画反复记号
 #   （下一小节开头画开始反复）；final_barline=True 末小节画终止线；tempo_words=None 不写速度文字。
+#   double_bars=[小节 …] 在该小节末尾画双细线；chant=True 无量记谱（素歌）：音符不画符干、不连符杠，
+#   拍号不打印（小节长度仍由 time / bar_time 决定，只用于排时间轴）。
 PIECES = {
     "vivaldi-winter-rv297": dict(
         prefix="winter",
@@ -114,10 +116,30 @@ PIECES = {
             dict(name="Basso", abbr="B.", program=43, staves=[("F", ["basso"])]),
         ],
     ),
+    "chant-dies-irae": dict(
+        prefix="diesirae",
+        work="Missa pro defunctis — Sequentia \"Dies iræ\" (Gregorian chant)",
+        movement="Stanzas 1–6 (melodies A A B B C C), as printed in the Liber Gradualis (1883)",
+        creators=[("composer", "Anonymous (Gregorian chant, 13th century)")],
+        source="Liber Gradualis a S. Gregorio Magno olim ordinatus … (Tournai: Desclée, Lefebvre et Soc., 1883; "
+               "Solesmes edition prepared by Dom Joseph Pothier), Missa pro Defunctis, Sequentia, pp. [144]–[145] "
+               "(BnF, département Musique, RES VMC MS-223, Gallica ark:/12148/btv1b104642876, images 764–765, "
+               "via Wikimedia Commons). Square notation has no note values: every printed note is encoded as a "
+               "quarter note, one bar per line of verse; neumes are encoded as slurs.",
+        time=(8, 4), fifths=0, mode="dorian", bars=(1, 18), pickup=None,
+        bar_time={2: (11, 4), 3: (10, 4), 4: (8, 4), 5: (11, 4), 6: (10, 4), 7: (13, 4), 8: (8, 4), 9: (13, 4),
+                  10: (13, 4), 11: (8, 4), 12: (13, 4), 13: (12, 4), 14: (11, 4), 15: (10, 4), 16: (12, 4),
+                  17: (11, 4), 18: (10, 4)},
+        double_bars=[3, 6, 9, 12, 15, 18], chant=True, encoding_date="2026-10-19",
+        tempo_words=None, midi_qpm=108,
+        parts=[
+            dict(name="Cantus", abbr="Cant.", program=53, staves=[("G", ["cantus"])]),
+        ],
+    ),
 }
 
 # ───────────────────────────── 读数据 ─────────────────────────────
-TOK = re.compile(r"^([0-9.]+):([A-G])(#|b)?(-?\d)/(\d+(?:\.\d+)?)((?:tr|TA\d|TB\d|[.>])*)$")
+TOK = re.compile(r"^([0-9.]+):([A-G])(#|b)?(-?\d)/(\d+(?:\.\d+)?)((?:tr|TA\d|TB\d|[.>()])*)$")
 STEP_PC = {"C": 0, "D": 2, "E": 4, "F": 5, "G": 7, "A": 9, "B": 11}
 
 
@@ -125,11 +147,20 @@ class DataError(Exception):
     pass
 
 
-def read_source(path: Path, prefix: str):
+def read_source(path: Path, prefix: str, syls: dict | None = None):
+    """syls：若给出，收集 "!syl <part> <小节> <音节 …>" 行（歌词音节，依次对应该小节的各个音组），{(part, 小节): [音节 …]}。"""
     sects, notes, cur = {}, [], None
     for n, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
         ln = raw.strip()
         if not ln or ln.startswith("#"):
+            continue
+        if ln.startswith("!syl "):
+            _, part, bar, *words = ln.split()
+            if syls is None:
+                raise DataError(f"{path}:{n}: !syl lines are not used by this piece")
+            if (part, int(bar)) in syls:
+                raise DataError(f"{path}:{n}: duplicate !syl for {part} bar {bar}")
+            syls[(part, int(bar))] = words
             continue
         if ln.startswith("!note "):
             _, part, bar, text = ln.split(None, 3)
@@ -188,13 +219,15 @@ def apply_corrections(path: Path, prefix: str, sects: dict) -> list:
 
 
 class Note:
-    __slots__ = ("on", "dur", "step", "alter", "octave", "stacc", "acc", "trill", "trem", "trem_beams")
+    __slots__ = ("on", "dur", "step", "alter", "octave", "stacc", "acc", "trill", "trem", "trem_beams", "slur_start", "slur_stop")
 
     def __init__(self, on, dur, step, alter, octave, flags):
         self.on, self.dur, self.step, self.alter, self.octave = on, dur, step, alter, octave
         self.stacc = "." in flags
         self.acc = ">" in flags
         self.trill = "tr" in flags
+        self.slur_start = "(" in flags          # 圆括号 = 连线（素歌里一个纽姆 / 一个音节上的音组）
+        self.slur_stop = ")" in flags
         m = re.search(r"T([AB])(\d)", flags)
         self.trem = m.group(1) if m else None
         self.trem_beams = int(m.group(2)) if m else 0
@@ -355,9 +388,40 @@ def rest_pieces(t0: F, t1: F, beat: F, bar0: F) -> list:
     return out
 
 
+def assign_syllables(key: str, part: str, bar: int, notes: list, words: list, lyrics: dict):
+    """把一小节的音节依次放到各音组的第一个音上。音组 = 圆括号连线括起的几个音，或连线外的单个音；连线不跨小节。
+    音节以 "-" 结尾表示词未完（下一音节同词）。"""
+    starts, open_ = [], False
+    for n in sorted(notes, key=lambda n: n.on):
+        if n.slur_start and open_:
+            raise DataError(f"{key}: {part} bar {bar}: slur opened twice")
+        if not open_:
+            starts.append(n)
+        if n.slur_start:
+            open_ = True
+        if n.slur_stop:
+            if not open_ or n.slur_start:
+                raise DataError(f"{key}: {part} bar {bar}: slur stop without start")
+            open_ = False
+    if open_:
+        raise DataError(f"{key}: {part} bar {bar}: slur not closed within the bar")
+    if len(starts) != len(words):
+        raise DataError(f"{key}: {part} bar {bar}: {len(words)} syllables for {len(starts)} note groups")
+    cont = False
+    for n, w in zip(starts, words):
+        more = w.endswith("-")
+        text = w[:-1] if more else w
+        syl = ("middle" if cont else "begin") if more else ("end" if cont else "single")
+        lyrics[id(n)] = (text, syl)
+        cont = more
+    if cont:
+        raise DataError(f"{key}: {part} bar {bar}: last syllable ends with '-'")
+
+
 def export_piece(key: str, cfg: dict) -> dict:
     d = TR / key
-    sects, notes_dir = read_source(d / "source.txt", cfg["prefix"])
+    syls = {}
+    sects, notes_dir = read_source(d / "source.txt", cfg["prefix"], syls)
     corrections = apply_corrections(d / "corrections.txt", cfg["prefix"], sects)
     g = Grid(cfg)
     used = {s for p in cfg["parts"] for _, ss in p["staves"] for s in ss}
@@ -367,9 +431,10 @@ def export_piece(key: str, cfg: dict) -> dict:
     num, den = cfg["time"]
     beat = F(3, 2) if (den == 8 and num % 3 == 0) else F(4, den)
     kalt = key_alter(cfg["fifths"])
+    chant = cfg.get("chant", False)
 
-    # 每个谱表的音符
-    staves_notes = []
+    # 每个谱表的音符；lyrics: {id(Note): (音节文字, syllabic)}
+    staves_notes, lyrics = [], {}
     for p in cfg["parts"]:
         per = []
         for clef, ss in p["staves"]:
@@ -378,9 +443,14 @@ def export_piece(key: str, cfg: dict) -> dict:
                 for bar, toks in sects.get(s, {}).items():
                     if bar < g.first or bar > g.last:
                         raise DataError(f"{key}: {s} bar {bar} outside excerpt")
-                    ns += [parse_token(t, g.start(bar)) for t in toks]
+                    bn = [parse_token(t, g.start(bar)) for t in toks]
+                    ns += bn
+                    if (s, bar) in syls:
+                        assign_syllables(key, s, bar, bn, syls.pop((s, bar)), lyrics)
             per.append(ns)
         staves_notes.append(per)
+    if syls:
+        raise DataError(f"{key}: !syl lines for bars without notes: {sorted(syls)}")
 
     all_vals = [g.mlen] + ([g.pickup] if g.pickup else []) + [g.length(b) for b in g.time]
     for per in staves_notes:
@@ -418,7 +488,7 @@ def export_piece(key: str, cfg: dict) -> dict:
         sub(mi, "midi-channel", i if i < 10 else i + 1)
         sub(mi, "midi-program", p["program"])
 
-    stats = dict(measures=len(g.bars()), heads_logical=0, heads_written=0, rests=0, ties=0,
+    stats = dict(measures=len(g.bars()), heads_logical=0, heads_written=0, rests=0, ties=0, lyrics=0,
                  corrections=corrections, divisions=divisions)
     midi_tracks = []
 
@@ -450,7 +520,7 @@ def export_piece(key: str, cfg: dict) -> dict:
                 k = sub(at, "key")
                 sub(k, "fifths", cfg["fifths"])
                 sub(k, "mode", cfg["mode"])
-                t = sub(at, "time")
+                t = sub(at, "time", **({"print_object": "no"} if chant else {}))
                 sub(t, "beats", num)
                 sub(t, "beat-type", den)
                 if nst > 1:
@@ -471,7 +541,7 @@ def export_piece(key: str, cfg: dict) -> dict:
                     sub(dr, "sound", tempo=cfg["midi_qpm"])
             elif g.time_sig(bar) != g.time_sig(bar - 1):
                 at = sub(m, "attributes")
-                t = sub(at, "time")
+                t = sub(at, "time", **({"print_object": "no"} if chant else {}))
                 sub(t, "beats", g.time_sig(bar)[0])
                 sub(t, "beat-type", g.time_sig(bar)[1])
             for si, (clef, ss) in enumerate(p["staves"]):
@@ -541,7 +611,7 @@ def export_piece(key: str, cfg: dict) -> dict:
                     if first_voice_written:
                         sub(m, "backup").append(_dur(blen, divisions))
                     first_voice_written = True
-                    beams = _beam_plan(segs, beat, b0)
+                    beams = {} if chant else _beam_plan(segs, beat, b0)
                     for idx, sg in enumerate(segs):
                         if sg[0] == "mrest":
                             ne = sub(m, "note")
@@ -586,6 +656,8 @@ def export_piece(key: str, cfg: dict) -> dict:
                                 acc = show.get((id(n), tt))
                                 if acc:
                                     sub(ne, "accidental", acc)
+                                if chant:
+                                    sub(ne, "stem", "none")
                                 if nst > 1:
                                     sub(ne, "staff", si + 1)
                                 if j == 0 and beams.get(idx):
@@ -597,10 +669,17 @@ def export_piece(key: str, cfg: dict) -> dict:
                                 if tstart:
                                     nots.append(("tied", "start"))
                                     stats["ties"] += 1
+                                if j == 0 and n.slur_start and not tstop:
+                                    nots.append(("slur", "start"))
+                                if j == 0 and n.slur_stop and not tstart:
+                                    nots.append(("slur", "stop"))
                                 if nots or (n.trill and not tstop) or ((n.stacc or n.acc) and not tstop):
                                     no = sub(ne, "notations")
                                     for tag, tv in nots:
-                                        sub(no, tag, type=tv)
+                                        if tag == "slur":
+                                            sub(no, tag, type=tv, number=1)
+                                        else:
+                                            sub(no, tag, type=tv)
                                     if n.trill and not tstop and j == 0:
                                         orn = sub(no, "ornaments")
                                         sub(orn, "trill-mark")
@@ -610,6 +689,12 @@ def export_piece(key: str, cfg: dict) -> dict:
                                             sub(ar, "accent")
                                         if n.stacc:
                                             sub(ar, "staccato")
+                                if j == 0 and not tstop and id(n) in lyrics:
+                                    text, syl = lyrics[id(n)]
+                                    ly = sub(ne, "lyric", number=1)
+                                    sub(ly, "syllabic", syl)
+                                    sub(ly, "text", text)
+                                    stats["lyrics"] += 1
                                 stats["heads_written"] += 1
                         elif sg[0] == "trem":
                             _, it, s0, s1 = sg
@@ -651,6 +736,9 @@ def export_piece(key: str, cfg: dict) -> dict:
                 bl = sub(m, "barline", location="right")
                 sub(bl, "bar-style", "light-heavy")
                 sub(bl, "repeat", direction="backward")
+            elif bar in cfg.get("double_bars", ()):
+                bl = sub(m, "barline", location="right")
+                sub(bl, "bar-style", "light-light")
             elif bar == g.last and cfg.get("final_barline"):
                 bl = sub(m, "barline", location="right")
                 sub(bl, "bar-style", "light-heavy")

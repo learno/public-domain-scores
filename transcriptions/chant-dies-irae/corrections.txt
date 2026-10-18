@@ -1,0 +1,7 @@
+# 修正清单 Corrections（导出时套在 source.txt 之上；旧 token 必须逐个精确匹配，否则导出报错）
+# 格式 Format:  <part> <小节>: <旧 token …> => <新 token …>      （新 token 写 "-" 表示只删除）
+# 每条前面用注释写明依据（扫描页、位置）。Give the evidence (scan page / position) in a comment above each entry.
+# 2026-10-19 对照 1883 年原印本扫描（p144 / p145）逐音核实，没有需要修正的地方：
+#   三对用同一旋律的诗节（第 1/2、3/4、5/6 节）逐音、逐纽姆一致，印面清楚，没有疑似误植。
+# Checked note by note against the 1883 print on 2026-10-19; no corrections needed (the three pairs of stanzas
+# sung to the same melody agree note for note and neume for neume).
